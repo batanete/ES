@@ -1,0 +1,420 @@
+swagger: '2.0'
+info:
+  title: Music Playlists
+  version: "0.1"
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /account/create:
+    post:
+      tags: [Create_account]
+      operationId: app.create_account
+      summary: create new user account
+      parameters:
+        - name: user
+          in: body
+          schema:
+            $ref: '#/definitions/User'
+
+      responses:
+        200:
+          description: Account created successfully
+        403:
+          description: Account already exists
+
+  /account/edit:
+    put:
+      tags: [Edit_account]
+      operationId: app.edit_account
+      summary: edit user's account
+      parameters:
+        - name: edituserinfo
+          in: body
+          schema:
+            $ref: '#/definitions/EditUser'
+
+      responses:
+        200:
+          description: Account edited successfully
+        403:
+          description: User is not allowed to edit the given user's info
+
+  /account/login:
+    get:
+      tags: [Login]
+      operationId: app.login
+      summary: attempt to login to an account
+      parameters:
+        - name: username
+          in: query
+          type: string
+        - name: password
+          in: query
+          type: string
+      responses:
+        200:
+          description: Login successful
+        403:
+          description: Login failed
+  /song:
+    get:
+      tags: [Search_song]
+      operationId: app.search_song
+      summary: search for a song by artist or title
+      parameters:
+        - name: username
+          in: query
+          type: string
+
+
+        - name: token
+          in: query
+          type: string
+
+
+        - name: criteria
+          in: query
+          type: string
+      responses:
+        200:
+          description: songs were returned successfully
+        403:
+          description: user is not logged in
+
+    put:
+      tags: [Disown_song]
+      operationId: app.disown_song
+      summary: Disown a song
+      parameters:
+        - name: user_token
+          in: body
+          schema:
+            $ref: '#/definitions/User_token'
+        - name: song_id
+          in: query
+          type: integer
+      responses:
+        204:
+          description: Song was disowned
+        403:
+          description: User is not the owner or is not logged in
+        404:
+          description: Song does not exist
+
+
+    delete:
+      tags: [Delete_song]
+      operationId: app.delete_song
+      summary: Remove a song
+      parameters:
+        - name: user_token
+          in: body
+          schema:
+            $ref: '#/definitions/User_token'
+        - name: song_id
+          in: query
+          type: integer
+      responses:
+        204:
+          description: Song was deleted
+        403:
+          description: User is not the owner or is not logged in
+        404:
+          description: Song does not exist
+  /playlist/addsong:
+    put:
+      tags: [Add_music_to_playlist]
+      operationId: app.add_music_to_playlist
+      summary: Add a single song to the playlist
+      parameters:
+        - name: user_token
+          in: body
+          schema:
+            $ref: '#/definitions/User_token'
+        - name: song_id
+          in: query
+          type: integer
+        - name: playlist_id
+          in: query
+          type: integer
+
+
+      responses:
+        204:
+          description: Song was added
+        403:
+          description: User is not the owner or is not logged in
+        404:
+          description: Song or playlist doesn't exist
+
+  /playlist/removesong:
+    delete:
+      tags: [Remove_music_from_playlist]
+      operationId: app.remove_music_from_playlist
+      summary: Remove a song from the playlist
+      parameters:
+        - name: user_token
+          in: body
+          schema:
+            $ref: '#/definitions/User_token'
+        - name: song_id
+          in: query
+          type: integer
+        - name: playlist_id
+          in: query
+          type: integer
+
+
+      responses:
+        200:
+          description: Song was removed
+        403:
+          description: User is not the owner or is not logged in
+        404:
+          description: Song doesn't exist
+
+  /account/create_playlist:
+    post:
+      tags: [Create_playlist]
+      operationId: app.create_playlist
+      summary: create new playlist
+      parameters:
+        - name: playlist_name
+          in: query
+          type: string
+        - name: user_token
+          in: body
+          schema:
+            $ref: '#/definitions/User_token'
+      responses:
+        200:
+          description: Playlist created successfully
+        400:
+          description: Playlist already exists with that name
+        403:
+          description: User is not logged in
+
+  /account/edit_playlist_name:
+    put:
+      tags: [Edit_playlist_name]
+      operationId: app.edit_playlist_name
+      summary: edit playlist name
+      parameters:
+        - name: playlist_id
+          in: query
+          type: integer
+        - name: new_name
+          in: query
+          type: string
+        - name: user_token
+          in: body
+          schema:
+            $ref: '#/definitions/User_token'
+      responses:
+        200:
+          description: Playlist name updated successfully
+        404:
+          description: Playlist name not found
+        403:
+          description: User is not logged in
+
+  /account/playlist/list:
+    get:
+      tags: [list_playlists]
+      operationId: app.list_playlists
+      summary: list playlists owned by user
+
+      parameters:
+        - name: username
+          in: query
+          type: string
+        - name: token
+          in: query
+          type: string
+        - name: order
+          in: query
+          type: string
+      responses:
+        200:
+          description: Listed playlists
+        403:
+          description: token could not be validated
+
+  /account/playlist/list_playlist_songs:
+    get:
+      tags: [list_playlist_songs]
+      operationId: app.list_playlist_songs
+      summary: list playlist songs
+      parameters:
+        - name: playlist_id
+          in: query
+          type: integer
+        - name: user_token
+          in: body
+          schema:
+            $ref: '#/definitions/User_token'
+      responses:
+        200:
+          description: Listed songs
+        404:
+          description: Playlist not found
+        403:
+          description: User is not logged in
+
+  /account/playlist/delete:
+    post:
+      tags: [delete_playlist]
+      operationId: app.delete_playlist
+      summary: delete playlist
+      parameters:
+        - name: playlist_id
+          in: query
+          type: integer
+        - name: user_token
+          in: body
+          schema:
+            $ref: '#/definitions/User_token'
+      responses:
+        200:
+          description: Listed songs
+        404:
+          description: Playlist not found
+        403:
+          description: User is not logged in
+
+  /account/edit_song:
+    post:
+      tags: [edit_song]
+      operationId: app.edit_song
+      summary: delete playlist
+      parameters:
+        - name: id_song
+          in: query
+          type: integer
+        - name: song_title
+          in: query
+          type: string
+        - name: song_artist
+          in: query
+          type: string
+        - name: song_year
+          in: query
+          type: string
+        - name: user_token
+          in: body
+          schema:
+            $ref: '#/definitions/User_token'
+      responses:
+        200:
+          description: Song edited
+        404:
+          description: Song not found
+        403:
+          description: User is not logged in
+
+  /account/playlist/list_songs:
+    get:
+      tags: [list_songs]
+      operationId: app.list_songs
+      summary: list songs
+      parameters:
+        - name: user_token
+          in: body
+          schema:
+            $ref: '#/definitions/User_token'
+
+      responses:
+        200:
+          description: Listed songs
+        404:
+          description: Songs not found
+        403:
+          description: User is not logged in
+
+
+definitions:
+  User_token:
+    type: object
+    required:
+      - username
+      - token
+    properties:
+      username:
+        type: string
+        description: User's email
+        example: "bata@gmail.com"
+        minLength: 1
+        maxLength: 100
+      token:
+        type: string
+        description: User's session token
+        example: "ouhfuidhsfskh"
+        minLength: 1
+        maxLength: 100
+  EditUser:
+    type: object
+    required:
+      - username
+      - token
+      - newname
+      - newemail
+      - newpassword
+    properties:
+      username:
+        type: string
+        description: user's email
+        example: "bata@gmail.com"
+        minLength: 1
+        maxLength: 100
+      token:
+        type: string
+        description: User's session token
+        example: "ouhfuidhsfskh"
+        minLength: 1
+        maxLength: 100
+      newname:
+        type: string
+        description: User's name
+        example: "Susie"
+        minLength: 1
+        maxLength: 100
+      newemail:
+        type: string
+        description: user's email
+        example: "bata@gmail.com"
+        minLength: 1
+        maxLength: 100
+      newpassword:
+        type: string
+        minLength: 1
+        maxLength: 100
+        description: Account password
+        example: "cenas"
+
+  User:
+    type: object
+    required:
+      - name
+      - email
+      - password
+    properties:
+      name:
+        type: string
+        description: User's name
+        example: "Susie"
+        minLength: 1
+        maxLength: 100
+      email:
+        type: string
+        description: user's email
+        example: "bata@gmail.com"
+        minLength: 1
+        maxLength: 100
+      password:
+        type: string
+        minLength: 1
+        maxLength: 100
+        description: Account password
+        example: "cenas"
