@@ -16,7 +16,10 @@ def get_session():
     global session,engine
     # Create an engine that stores data in the local directory's
     # sqlalchemy_example.db file.
-    engine = create_engine('mysql+mysqlconnector://root:root@localhost/esdb')
+    with open("bd_url", "r") as f:
+        bd_url = f.read()
+
+    engine = create_engine(bd_url)
     DBSession = sessionmaker(bind=engine)
     # A DBSession() instance establishes all conversations with the database
     # and represents a "staging zone" for all the objects loaded into the
@@ -75,7 +78,7 @@ def list_playlists(username,order):
     for playlist in playlists:
         res.append(playlist[0])
     return res
-    
+
 #returns whether the given user credentials are correct
 def verify_account(username,password):
     acc=session.query(User).filter_by(email=username,password=password).first()
