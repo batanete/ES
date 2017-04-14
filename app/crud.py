@@ -19,6 +19,7 @@ def get_session():
     with open("bd_url", "r") as f:
         bd_url = f.read()
 
+
     engine = create_engine(bd_url)
     DBSession = sessionmaker(bind=engine)
     # A DBSession() instance establishes all conversations with the database
