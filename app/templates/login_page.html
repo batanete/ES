@@ -201,15 +201,7 @@
                                 </label>
                             </div>
         		    	</div>
-				        <div class="modal-footer">
-                            <div>
-                                <button type="submit" class="btn btn-primary btn-lg btn-block">Login</button>
-                            </div>
-				    	    <div>
-                                <button id="login_lost_btn" type="button" class="btn btn-link">Lost Password?</button>
-                                <button id="login_register_btn" type="button" class="btn btn-link">Register</button>
-                            </div>
-				        </div>
+				        <div id="create_acc_div3"></div>
                     </form>
                     <form id="lost-form" style="display:none;">
     	    		    <div class="modal-body">
@@ -219,15 +211,7 @@
                             </div>
 		    				<input id="lost_email" class="form-control" type="text" placeholder="E-Mail (type ERROR for error effect)" required></input>
             			</div>
-		    		    <div class="modal-footer">
-                            <div>
-                                <button type="submit" class="btn btn-primary btn-lg btn-block">Send</button>
-                            </div>
-                            <div>
-                                <button id="lost_login_btn" type="button" class="btn btn-link">Log In</button>
-                                <button id="lost_register_btn" type="button" class="btn btn-link">Register</button>
-                            </div>
-		    		    </div>
+		    		    <div id="create_acc_div2"></div>
                     </form>
                     <form id="register-form" style="display:none;">
             		    <div class="modal-body">
@@ -364,16 +348,15 @@ $(function() {
 
 class Account_info extends React.Component {
     render(){
-    return
-    (
+    return (
     <div className="Account_info">
-    <div class="modal-footer">
+    <div className="modal-footer">
         <div>
-            <button type="submit" class="btn btn-primary btn-lg btn-block">Register</button>
+            <button type="submit" className="btn btn-primary btn-lg btn-block">Register</button>
         </div>
         <div>
-            <button id="register_login_btn" type="button" class="btn btn-link">Log In</button>
-            <button id="register_lost_btn" type="button" class="btn btn-link">Lost Password?</button>
+            <button id="register_login_btn" type="button" className="btn btn-link">Log In</button>
+            <button id="register_lost_btn" type="button" className="btn btn-link">Lost Password?</button>
         </div>
     </div>
     </div>
@@ -381,8 +364,10 @@ class Account_info extends React.Component {
     }
 }
 
-ReactDOM.render(<Account_info  />, document.getElementById("create_acc_div"));
+ReactDOM.render(<Account_info/>, document.getElementById("create_acc_div"));
 
+ReactDOM.render(<Account_info/>, document.getElementById("create_acc_div2"));
+ReactDOM.render(<Account_info/>, document.getElementById("create_acc_div3"));
 
 </script>
 
