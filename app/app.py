@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import datetime
 import logging
+import random
+import string
 
 import connexion
 from connexion import NoContent
@@ -39,7 +41,7 @@ def create_account_menu():
 
 #returns the login screen
 def login_menu():
-    return render_template('login_page.html',username='eu')
+    return render_template("login_page.html",loginerror="false")
 
 #TODOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOoo
 def main_menu():
@@ -77,12 +79,12 @@ def edit_account(edituserinfo):
 def login(username,password):
     if not crud.verify_account(username,encrypt_password(password)):
         logging.warning('login failed on account '+username)
-        return NoContent,403
+        return render_template("login_page.html",loginerror="true"),403
     else:
         token=gen_token()
         sessions[username]=token
         logging.info('login successful on account '+username)
-        return (username,token),200
+        return "logado",200
 
 #method for deleting a song uploaded by the user
 def delete_song(user_token,song_id):

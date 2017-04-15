@@ -7,7 +7,7 @@ consumes:
 produces:
   - application/json
 paths:
-  /login_menu:
+  /:
     get:
       tags: [Login_menu]
       operationId: app.login_menu
@@ -74,6 +74,10 @@ paths:
       tags: [Login]
       operationId: app.login
       summary: attempt to login to an account
+      
+      produces:
+        - text/html
+      
       parameters:
         - name: username
           in: query
