@@ -7,6 +7,21 @@ consumes:
 produces:
   - application/json
 paths:
+  /create_account_menu:
+    get:
+      tags: [Create_account_menu]
+      operationId: app.create_account_menu
+      summary: show menu for creating a new account
+      
+      produces:
+        - text/html
+
+      responses:
+        200:
+          description: Account created successfully
+        
+  
+
   /account/create:
     post:
       tags: [Create_account]

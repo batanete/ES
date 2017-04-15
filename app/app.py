@@ -4,11 +4,13 @@ import logging
 
 import connexion
 from connexion import NoContent
+from flask import render_template
 from hashlib import sha1
 
 import crud
 
 sessions={}
+
 
 #returns a password's hash according to md5
 def encrypt_password(key):
@@ -28,6 +30,11 @@ def verify_token(username,token):
 
     return sessions[username]==token
 
+#returns html page for creating account
+def create_account_menu():
+    return render_template('register_page.html')
+    
+    
 
 #method for creating a new account.returns code 200 in case of success and 403 in case account exists
 def create_account(user):
