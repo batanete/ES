@@ -7,6 +7,19 @@ consumes:
 produces:
   - application/json
 paths:
+  /login_menu:
+    get:
+      tags: [Login_menu]
+      operationId: app.login_menu
+      summary: show menu for logging into an account
+      
+      produces:
+        - text/html
+
+      responses:
+        200:
+          description: Login menu returned
+
   /create_account_menu:
     get:
       tags: [Create_account_menu]
@@ -18,7 +31,7 @@ paths:
 
       responses:
         200:
-          description: Account created successfully
+          description: Account creation menu returned.
         
   
 

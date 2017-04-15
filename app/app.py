@@ -12,7 +12,7 @@ import crud
 sessions={}
 
 
-#returns a password's hash according to md5
+#returns a password's hash according to sha1
 def encrypt_password(key):
     m=sha1()
     m.update(key)
@@ -25,16 +25,25 @@ def gen_token(size=20):
 
 #verifies if token is correct for the given user
 def verify_token(username,token):
+    return True
+    """
     if username not in sessions.keys():
         return False
 
     return sessions[username]==token
+    """
 
 #returns html page for creating account
 def create_account_menu():
     return render_template('register_page.html')
-    
-    
+
+#returns the login screen
+def login_menu():
+    return render_template('login_page.html',username='eu')
+
+#TODOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOoo
+def main_menu():
+    return render_template('main_page.html')
 
 #method for creating a new account.returns code 200 in case of success and 403 in case account exists
 def create_account(user):
