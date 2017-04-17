@@ -721,53 +721,74 @@ header {
 <body>
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <body class="home">
-    <div class="container-fluid display-table">
-        <div class="row display-table-row">
-            <div class="col-md-2 col-sm-1 hidden-xs display-table-cell v-align box" id="navigation">
-                <div class="navi">
+    
+    <div id="reactcomps"></div>
+    
+    
+    
+
+</body>
+<script type="text/javascript">
+$(document).ready(function(){
+   $('[data-toggle="offcanvas"]').click(function(){
+       $("#navigation").toggleclassName("hidden-xs");
+   });
+});
+
+</script>
+
+<script type="text/babel">
+
+class MainComponent extends React.Component{
+    render(){
+        return(
+        <div className="container-fluid display-table">
+        <div className="row display-table-row">
+            <div className="col-md-2 col-sm-1 hidden-xs display-table-cell v-align box" id="navigation">
+                <div className="navi">
                     <ul>
-                        <li class="active"><a><i class="fa fa-home" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Home</span></a></li>
-                        <li><a><i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Musics</span></a></li>
-                        <li><a><i class="fa fa-bar-chart" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Playlists</span></a></li>
-                        <li><a><i class="fa fa-cog" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Account Settings</span></a></li>
+                        <li className="active"><a><i className="fa fa-home" aria-hidden="true"></i><span className="hidden-xs hidden-sm">Home</span></a></li>
+                        <li><a><i className="fa fa-tasks" aria-hidden="true"></i><span className="hidden-xs hidden-sm">Musics</span></a></li>
+                        <li><a><i className="fa fa-bar-chart" aria-hidden="true"></i><span className="hidden-xs hidden-sm">Playlists</span></a></li>
+                        <li><a><i className="fa fa-cog" aria-hidden="true"></i><span className="hidden-xs hidden-sm">Account Settings</span></a></li>
                     </ul>
                 </div>
             </div>
-            <div class="col-md-10 col-sm-11 display-table-cell v-align">
-                <!--<button type="button" class="slide-toggle">Slide Toggle</button> -->
-                <div class="row">
+            <div className="col-md-10 col-sm-11 display-table-cell v-align">
+                
+                <div className="row">
                     <header>
-                        <div class="col-md-7">
-                            <nav class="navbar-default pull-left">
-                                <div class="navbar-header">
-                                    <button type="button" class="navbar-toggle collapsed" data-toggle="offcanvas" data-target="#side-menu" aria-expanded="false">
-                                        <span class="sr-only">Toggle navigation</span>
-                                        <span class="icon-bar"></span>
-                                        <span class="icon-bar"></span>
-                                        <span class="icon-bar"></span>
+                        <div className="col-md-7">
+                            <nav className="navbar-default pull-left">
+                                <div className="navbar-header">
+                                    <button type="button" className="navbar-toggle collapsed" data-toggle="offcanvas" data-target="#side-menu" aria-expanded="false">
+                                        <span className="sr-only">Toggle navigation</span>
+                                        <span className="icon-bar"></span>
+                                        <span className="icon-bar"></span>
+                                        <span className="icon-bar"></span>
                                     </button>
                                 </div>
                             </nav>
-                            <div class="search hidden-xs hidden-sm">
-                                <input type="text" placeholder="Search" id="search">
+                            <div className="search hidden-xs hidden-sm">
+                                <input type="text" placeholder="Search" id="search"></input>
                             </div>
                         </div>
-                        <div class="col-md-5">
-                            <div class="header-rightside">
-                                <ul class="list-inline header-top pull-right">
-                                    <li class="dropdown">
-                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><p>user</p>
-                                            <b class="caret"></b></a>
-                                        <ul class="dropdown-menu">
+                        <div className="col-md-5">
+                            <div className="header-rightside">
+                                <ul className="list-inline header-top pull-right">
+                                    <li className="dropdown">
+                                        <a href="#" className="dropdown-toggle" data-toggle="dropdown"><p>user</p>
+                                            <b className="caret"></b></a>
+                                        <ul className="dropdown-menu">
                                             <li>
-                                                <div class="navbar-content">
+                                                <div className="navbar-content">
                                                     <span>JS Krishna</span>
-                                                    <p class="text-muted small">
+                                                    <p className="text-muted small">
                                                         me@jskrishna.com
                                                     </p>
-                                                    <div class="divider">
+                                                    <div className="divider">
                                                     </div>
-                                                    <a href="#" class="view btn-sm active">View Profile</a>
+                                                    <a href="#" className="view btn-sm active">View Profile</a>
                                                 </div>
                                             </li>
                                         </ul>
@@ -777,19 +798,19 @@ header {
                         </div>
                     </header>
                 </div>
-                <div class="user-dashboard">
+                <div className="user-dashboard">
                     <h1>Hello, JS</h1>
-                    <div class="row">
-                        <div class="col-md-5 col-sm-5 col-xs-12 gutter">
+                    <div className="row">
+                        <div className="col-md-5 col-sm-5 col-xs-12 gutter">
 
-                            <div class="sales">
+                            <div className="sales">
                                 <h2>Your Sale</h2>
 
-                                <div class="btn-group">
-                                    <button class="btn btn-secondary btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <div className="btn-group">
+                                    <button className="btn btn-secondary btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <span>Period:</span> Last Year
                                     </button>
-                                    <div class="dropdown-menu">
+                                    <div className="dropdown-menu">
                                         <a href="#">2012</a>
                                         <a href="#">2014</a>
                                         <a href="#">2015</a>
@@ -798,15 +819,15 @@ header {
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-7 col-sm-7 col-xs-12 gutter">
+                        <div className="col-md-7 col-sm-7 col-xs-12 gutter">
 
-                            <div class="sales report">
+                            <div className="sales report">
                                 <h2>Report</h2>
-                                <div class="btn-group">
-                                    <button class="btn btn-secondary btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <div className="btn-group">
+                                    <button className="btn btn-secondary btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <span>Period:</span> Last Year
                                     </button>
-                                    <div class="dropdown-menu">
+                                    <div className="dropdown-menu">
                                         <a href="#">2012</a>
                                         <a href="#">2014</a>
                                         <a href="#">2015</a>
@@ -821,21 +842,17 @@ header {
         </div>
 
     </div>
+    );
+        
+        
+    }
+    
+    
+}
 
-
-
-    <!-- Modal -->
-
-</body>
-<script type="text/javascript">
-$(document).ready(function(){
-   $('[data-toggle="offcanvas"]').click(function(){
-       $("#navigation").toggleClass("hidden-xs");
-   });
-});
+ReactDOM.render(<MainComponent/>,document.getElementById("reactcomps"));
 
 </script>
-
 
 </body>
 </html>
