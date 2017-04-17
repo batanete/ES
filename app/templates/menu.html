@@ -749,12 +749,15 @@ $(document).ready(function(){
 class MainComponent extends React.Component{
     constructor(props){
         super(props);
-        this.state={sidebar:<SideBar/>};
+        this.state={active:'home',sidebar:<SideBar parent={this}/>};
 
     }
 
 
     render(){
+        var active=this.state.active;
+
+        console.log('entra no render');
 
         return(
         <div className="container-fluid display-table">
@@ -872,7 +875,7 @@ class MainComponent extends React.Component{
                     </div>
 
                 </div>
-                <div id="save_Settings"></div>
+                <div>{active=='settings' ? <SaveSettings/> : ''}</div>
             </div>
 
         </div>
@@ -900,21 +903,25 @@ class SideBar extends React.Component{
     activateHome(){
         console.log(this.state.active);
         this.setState({active:'home'});
+        this.props.parent.setState({active:'home'});
         console.log('1');
     }
 
     activateMusics(){
         this.setState({active:'musics'});
+        this.props.parent.setState({active:'musics'});
         console.log('2');
     }
 
     activatePlaylists(){
         this.setState({active:'playlists'});
+        this.props.parent.setState({active:'playlists'});
         console.log('3');
     }
 
     activateSettings(){
         this.setState({active:'settings'});
+        this.props.parent.setState({active:'settings'});
         console.log('3');
     }
 
@@ -963,8 +970,9 @@ class SaveSettings extends React.Component{
         );
     }
     render(){
+        console.log('entra no render do ss');
         return(
-            <div className="save_Settings">
+            <div className="SaveSettings">
                 <div className="form-group ">
                     <button type="button" className="btn btn-primary btn-lg btn-block login-button" onClick={this.clicked}  >Save</button>
                 </div>
