@@ -167,35 +167,43 @@ class Create_Acc_Btn extends React.Component{
     
     
     
-    
     clicked(){
         
         
         var link=home+'/account/create';
         
         var dat={
-            'name':$('#name').val(),
-            'email':$('#email').val(),
-            'password':$('#password').val()
+            name:$('#name').val(),
+            email:$('#email').val(),
+            password:$('#password').val()
         };
         
         
         $.ajax({
                 type: 'POST',
                 url: link,
-                
+                dataType: 'text',
                 data: JSON.stringify(dat),
-                contentType: 'application/json'
+                contentType: 'application/json',
+                success: function(data) {
+					alert("account created successfully");
+                    
+                }.bind(this),
+                error: function(xhr, status, err) {
+                   alert("account already exists.");
+                }.bind(this)
         }
         );
         
-    
+    }
     render(){
         return(
             <div className="Create_Acc_Btn">
                 <div className="form-group ">
                     <button type="button" className="btn btn-primary btn-lg btn-block login-button" onClick={this.clicked}  >Register</button>
                 </div>
+                
+                
             </div>
         );
         
