@@ -89,7 +89,7 @@ def login(username,password):
         token=gen_token()
         sessions[username]=token
         logging.info('login successful on account '+username)
-        return "logado",200
+        return render_template('menu.html'),200
 
 #method for deleting a song uploaded by the user
 def delete_song(user_token,song_id):
