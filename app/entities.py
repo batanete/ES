@@ -1,7 +1,7 @@
 import os
 import sys
 import json
-from sqlalchemy import Column, ForeignKey, Integer, String, Table,desc
+from sqlalchemy import Column, ForeignKey, Integer, String, Table,desc,Date
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship,sessionmaker
 from sqlalchemy import create_engine
@@ -54,8 +54,11 @@ class Playlist(Base):
     name = Column(String(50), nullable=False)
 
     owner_id = Column(Integer, ForeignKey('users.id'))
+    
+    creation_date=Column(Date,nullable=False)
+    
     owner = relationship("User", back_populates="playlists")
-
+    
 
     songs=relationship("Song",
                     secondary=association_songs_playlists,
