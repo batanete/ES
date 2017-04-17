@@ -50,13 +50,13 @@ def main_menu():
 
 #method for creating a new account.returns code 200 in case of success and 403 in case account exists
 def create_account(user):
-    
+
     print(user)
-    
+
     username=str(user['email'])
     name=str(user['name'])
     password=str(user['password'])
-    
+
     logging.info("attempting to create account "+username)
     if crud.create_account(name,username,encrypt_password(password)):
         logging.info("successfully created account "+username)
