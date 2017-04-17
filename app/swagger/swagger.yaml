@@ -40,12 +40,14 @@ paths:
       tags: [Create_account]
       operationId: app.create_account
       summary: create new user account
+      
+      
+      
       parameters:
         - name: user
           in: body
           schema:
             $ref: '#/definitions/User'
-
       responses:
         200:
           description: Account created successfully

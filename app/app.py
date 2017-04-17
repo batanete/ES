@@ -16,6 +16,7 @@ sessions={}
 
 #returns a password's hash according to sha1
 def encrypt_password(key):
+    print('key:'+str(key))
     m=sha1()
     m.update(key)
     #return m.digest()
@@ -49,15 +50,19 @@ def main_menu():
 
 #method for creating a new account.returns code 200 in case of success and 403 in case account exists
 def create_account(user):
-    name=user['name']
-    email=user['email']
-    password=user['password']
-    logging.info("attempting to create account "+email)
-    if crud.create_account(name,email,encrypt_password(password)):
-        logging.info("successfully created account "+email)
+    
+    print(user)
+    
+    username=str(user['email'])
+    name=str(user['name'])
+    password=str(user['password'])
+    
+    logging.info("attempting to create account "+username)
+    if crud.create_account(name,username,encrypt_password(password)):
+        logging.info("successfully created account "+username)
         return NoContent,200
     else:
-        logging.warning("failed to create account "+email+".account already exists.")
+        logging.warning("failed to create account "+username+".account already exists.")
         return NoContent,403
 
 

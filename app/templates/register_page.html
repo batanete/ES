@@ -92,13 +92,6 @@ input::-webkit-input-placeholder {
 <html lang="en">
     <head> 
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="stylesheet" type="text/css" href="assets/css/bootstrap.css">
-
-		<!-- Website CSS style -->
-		<link rel="stylesheet" type="text/css" href="assets/css/main.css">
-
-		<!-- Website Font style -->
-	    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
 		
 		<!-- Google Fonts -->
 		<link href='https://fonts.googleapis.com/css?family=Passion+One' rel='stylesheet' type='text/css'>
@@ -118,7 +111,7 @@ input::-webkit-input-placeholder {
 	               	</div>
 	            </div> 
 				<div class="main-login main-center">
-					<form class="form-horizontal" method="post" action="#">
+					<form class="form-horizontal" >
 						
 						<div class="form-group">
 							<label for="name" class="cols-sm-2 control-label">Your Name</label>
@@ -140,15 +133,7 @@ input::-webkit-input-placeholder {
 							</div>
 						</div>
 
-						<div class="form-group">
-							<label for="username" class="cols-sm-2 control-label">Username</label>
-							<div class="cols-sm-10">
-								<div class="input-group">
-									<span class="input-group-addon"><i class="fa fa-users fa" aria-hidden="true"></i></span>
-									<input type="text" class="form-control" name="username" id="username"  placeholder="Enter your Username"/>
-								</div>
-							</div>
-						</div>
+						
 
 						<div class="form-group">
 							<label for="password" class="cols-sm-2 control-label">Password</label>
@@ -160,34 +145,65 @@ input::-webkit-input-placeholder {
 							</div>
 						</div>
 
-						<div class="form-group">
-							<label for="confirm" class="cols-sm-2 control-label">Confirm Password</label>
-							<div class="cols-sm-10">
-								<div class="input-group">
-									<span class="input-group-addon"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></span>
-									<input type="password" class="form-control" name="confirm" id="confirm"  placeholder="Confirm your Password"/>
-								</div>
-							</div>
-						</div>
-
-						<div class="form-group ">
-							<button type="button" class="btn btn-primary btn-lg btn-block login-button">Register</button>
-						</div>
+						<div id="create_acc_btn"></div>
+                        
+						
 						<div class="login-register">
-				            <a href="index.php">Login</a>
+				            <a href="/">Login</a>
 				         </div>
 					</form>
 				</div>
 			</div>
 		</div>
 
-		<script type="text/javascript" src="assets/js/bootstrap.js"></script>
 	</body>
 </html>
-<script type="text/javascript">
+<script type="text/babel">
+    
+var home='http://localhost:8000';    
+    
 
+class Create_Acc_Btn extends React.Component{
+    
+    
+    
+    
+    clicked(){
+        
+        
+        var link=home+'/account/create';
+        
+        var dat={
+            'name':$('#name').val(),
+            'email':$('#email').val(),
+            'password':$('#password').val()
+        };
+        
+        
+        $.ajax({
+                type: 'POST',
+                url: link,
+                
+                data: JSON.stringify(dat),
+                contentType: 'application/json'
+        }
+        );
+        
+    
+    render(){
+        return(
+            <div className="Create_Acc_Btn">
+                <div className="form-group ">
+                    <button type="button" className="btn btn-primary btn-lg btn-block login-button" onClick={this.clicked}  >Register</button>
+                </div>
+            </div>
+        );
+        
+    }
+    
+}
 
-
+ReactDOM.render(<Create_Acc_Btn/>, document.getElementById("create_acc_btn"));
 
 </script>
 </body>
