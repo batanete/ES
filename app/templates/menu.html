@@ -740,19 +740,20 @@ $(document).ready(function(){
 <script type="text/babel">
 
 class MainComponent extends React.Component{
+    constructor(props){
+        super(props);
+        this.state={sidebar:<SideBar/>};
+
+    }
+
+
     render(){
+
         return(
         <div className="container-fluid display-table">
         <div className="row display-table-row">
             <div className="col-md-2 col-sm-1 hidden-xs display-table-cell v-align box" id="navigation">
-                <div className="navi">
-                    <ul>
-                        <li className="active"><a><i className="fa fa-home" aria-hidden="true"></i><span className="hidden-xs hidden-sm">Home</span></a></li>
-                        <li><a><i className="fa fa-tasks" aria-hidden="true"></i><span className="hidden-xs hidden-sm">Musics</span></a></li>
-                        <li><a><i className="fa fa-bar-chart" aria-hidden="true"></i><span className="hidden-xs hidden-sm">Playlists</span></a></li>
-                        <li><a><i className="fa fa-cog" aria-hidden="true"></i><span className="hidden-xs hidden-sm">Account Settings</span></a></li>
-                    </ul>
-                </div>
+                {this.state.sidebar}
             </div>
             <div className="col-md-10 col-sm-11 display-table-cell v-align">
 
@@ -850,13 +851,58 @@ class MainComponent extends React.Component{
 
 }
 
-ReactDOM.render(<MainComponent/>,document.getElementById("reactcomps"));
+class SideBar extends React.Component{
+    constructor(props){
+        super(props);
+        this.state={active:'home'};
 
-</script>
+        this.activateHome=this.activateHome.bind(this);
+        this.activateMusics=this.activateMusics.bind(this);
+        this.activatePlaylists=this.activatePlaylists.bind(this);
+        this.activateSettings=this.activateSettings.bind(this);
 
-<script type="text/babel">
+    }
 
-class Save_Settings extends React.Component{
+    activateHome(){
+        console.log(this.state.active);
+        this.setState({active:'home'});
+        console.log('1');
+    }
+
+    activateMusics(){
+        this.setState({active:'musics'});
+        console.log('2');
+    }
+
+    activatePlaylists(){
+        this.setState({active:'playlists'});
+        console.log('3');
+    }
+
+    activateSettings(){
+        this.setState({active:'settings'});
+        console.log('3');
+    }
+
+    render(){
+        return(
+            <div className="navi">
+                <ul>
+                    <li className={this.state.active=='home'? 'active' : 'inactive'} onClick={this.activateHome}><a><i className="fa fa-home" aria-hidden="true"></i><span className="hidden-xs hidden-sm">Home</span></a></li>
+                    <li className={this.state.active=='musics'? 'active' : 'inactive'} onClick={this.activateMusics}><a><i className="fa fa-tasks" aria-hidden="true"></i><span className="hidden-xs hidden-sm">Musics</span></a></li>
+                    <li className={this.state.active=='playlists'? 'active' : 'inactive'} onClick={this.activatePlaylists}><a><i className="fa fa-bar-chart" aria-hidden="true"></i><span className="hidden-xs hidden-sm">Playlists</span></a></li>
+                    <li className={this.state.active=='settings'? 'active' : 'inactive'} onClick={this.activateSettings}><a><i className="fa fa-cog" aria-hidden="true"></i><span className="hidden-xs hidden-sm">Account Settings</span></a></li>
+                </ul>
+            </div>
+        );
+    }
+
+
+}
+
+
+
+class SaveSettings extends React.Component{
     clicked(){
         var home='http://localhost:8000';
         var get_username = "teste"
@@ -886,11 +932,20 @@ class Save_Settings extends React.Component{
     }
     render(){
         return(
-
+		<p>cenas</p>
         );
 
     }
 
 }
+
+ReactDOM.render(<MainComponent/>,document.getElementById("reactcomps"));
+
+
+
+</script>
+
+
+
 </body>
 </html>
