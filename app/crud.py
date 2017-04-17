@@ -1,7 +1,7 @@
 import os
 import sys
 from entities import *
-
+from datetime import datetime
 session=None
 engine=None
 
@@ -188,7 +188,7 @@ def create_playlist(playlist_name, username):
         if get_playlist is not None:
             return False
         else:
-            session.add(Playlist(name=playlist_name, owner=acc_user, owner_id=acc_user.id))
+            session.add(Playlist(name=playlist_name, owner=acc_user, owner_id=acc_user.id,creation_date=datetime.now()))
             session.commit()
             return True
 
