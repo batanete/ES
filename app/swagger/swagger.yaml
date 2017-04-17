@@ -12,7 +12,7 @@ paths:
       tags: [Login_menu]
       operationId: app.login_menu
       summary: show menu for logging into an account
-      
+
       produces:
         - text/html
 
@@ -25,24 +25,21 @@ paths:
       tags: [Create_account_menu]
       operationId: app.create_account_menu
       summary: show menu for creating a new account
-      
+
       produces:
         - text/html
 
       responses:
         200:
           description: Account creation menu returned.
-        
-  
+
+
 
   /account/create:
     post:
       tags: [Create_account]
       operationId: app.create_account
       summary: create new user account
-      
-      
-      
       parameters:
         - name: user
           in: body
@@ -76,10 +73,10 @@ paths:
       tags: [Login]
       operationId: app.login
       summary: attempt to login to an account
-      
+
       produces:
         - text/html
-      
+
       parameters:
         - name: username
           in: query
