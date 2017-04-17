@@ -836,6 +836,44 @@ $(document).ready(function(){
 
 </script>
 
+<script type="text/babel">
+
+class Save_Settings extends React.Component{
+    clicked(){
+        var home='http://localhost:8000';
+        var get_username = "teste"
+        var get_token = "token"
+        var dat={
+            username:get_username,
+            token:get_token,
+            newname:$('#newname').val(),
+            newemail:$('#newemail').val(),
+            newpassword:$('#newname').val(),
+        }
+        $.ajax({
+                type: 'PUT',
+                url: link,
+                dataType: 'text',
+                data: JSON.stringify(dat),
+                contentType: 'application/json',
+                success: function(data) {
+					alert("account edited successfully");
+
+                }.bind(this),
+                error: function(xhr, status, err) {
+                   alert("Problem in editing information.");
+                }.bind(this)
+        }
+        );
+    }
+    render(){
+        return(
+            
+        );
+
+    }
+
+}
 
 </body>
 </html>
