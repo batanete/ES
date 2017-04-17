@@ -41,6 +41,13 @@ li,ul{
     width: 100%;
     background: #0e1a35;
 }
+.login-button{
+	margin-top: 100px;
+    width: 35%;
+    background: #0e1a35;
+    text-align: center;
+
+}
 
 .login-signup {
     display: table-cell;
@@ -802,43 +809,71 @@ class MainComponent extends React.Component{
                     <h1>Hello, JS</h1>
                     <div className="row">
                         <div className="col-md-5 col-sm-5 col-xs-12 gutter">
-
                             <div className="sales">
-                                <h2>Your Sale</h2>
+                                <h2>Current Information</h2>
 
-                                <div className="btn-group">
-                                    <button className="btn btn-secondary btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <span>Period:</span> Last Year
-                                    </button>
-                                    <div className="dropdown-menu">
-                                        <a href="#">2012</a>
-                                        <a href="#">2014</a>
-                                        <a href="#">2015</a>
-                                        <a href="#">2016</a>
-                                    </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="name" class="cols-sm-2 control-label">Current Name:</label>
+                                <div class="cols-sm-10">
+                                    <label for="name" class="cols-sm-2 control-label">Name</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="name" class="cols-sm-2 control-label">Current Email:</label>
+                                <div class="cols-sm-10">
+                                    <label for="name" class="cols-sm-2 control-label">email@email.com</label>
                                 </div>
                             </div>
                         </div>
                         <div className="col-md-7 col-sm-7 col-xs-12 gutter">
-
                             <div className="sales report">
-                                <h2>Report</h2>
-                                <div className="btn-group">
-                                    <button className="btn btn-secondary btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <span>Period:</span> Last Year
-                                    </button>
-                                    <div className="dropdown-menu">
-                                        <a href="#">2012</a>
-                                        <a href="#">2014</a>
-                                        <a href="#">2015</a>
-                                        <a href="#">2016</a>
+                                <h2>New Information</h2>
+
+                            </div>
+                            <form class="form-horizontal" >
+
+                                <div class="form-group">
+                                    <label for="name" class="cols-sm-2 control-label">Your New Name</label>
+                                    <div class="cols-sm-10">
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
+                                            <input type="text" class="form-control" name="name" id="name"  placeholder="Enter your new Name"/>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+
+                                <div class="form-group">
+                                    <label for="email" class="cols-sm-2 control-label">Your New Email</label>
+                                    <div class="cols-sm-10">
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
+                                            <input type="text" class="form-control" name="email" id="email"  placeholder="Enter your new Email"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="form-group">
+                                    <label for="password" class="cols-sm-2 control-label">Your New Password</label>
+                                    <div class="cols-sm-10">
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></span>
+                                            <input type="password" class="form-control" name="password" id="password"  placeholder="Enter your new Password"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+
                         </div>
+
                     </div>
+
                 </div>
+                <div id="save_Settings"></div>
             </div>
+
         </div>
 
     </div>
@@ -856,9 +891,9 @@ ReactDOM.render(<MainComponent/>,document.getElementById("reactcomps"));
 
 <script type="text/babel">
 
-class Save_Settings extends React.Component{
+class SaveSettings extends React.Component{
     clicked(){
-        var home='http://localhost:8000';
+        var home='http://localhost:8000/account/edit';
         var get_username = "teste"
         var get_token = "token"
         var dat={
@@ -870,7 +905,7 @@ class Save_Settings extends React.Component{
         }
         $.ajax({
                 type: 'PUT',
-                url: link,
+                url: home,
                 dataType: 'text',
                 data: JSON.stringify(dat),
                 contentType: 'application/json',
@@ -886,11 +921,17 @@ class Save_Settings extends React.Component{
     }
     render(){
         return(
-
+            <div className="save_Settings">
+                <div className="form-group ">
+                    <button type="button" className="btn btn-primary btn-lg btn-block login-button" onClick={this.clicked}  >Save</button>
+                </div>
+            </div>
         );
 
     }
 
 }
+ReactDOM.render(<SaveSettings/>, document.getElementById("save_Settings"));
+</script>
 </body>
 </html>
