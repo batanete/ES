@@ -326,5 +326,5 @@ if __name__=='__main__':
     app = connexion.App(__name__, specification_dir='swagger/')
     app.add_api('swagger.yaml')
 
-    app.app.secret_key('cenas lixadas')
+    #app.app.secret_key('cenas lixadas')
     app.run(port=8000)
