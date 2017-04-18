@@ -6,12 +6,14 @@ import string
 
 import connexion
 from connexion import NoContent
-from flask import render_template,session
+from flask import Flask,render_template,request,make_response,session,escape,redirect,url_for
 from hashlib import sha1
 from base64 import b64encode
 import crud
+from datetime import timedelta
 
 sessions={}
+
 
 
 #returns a password's hash according to sha1
@@ -20,7 +22,6 @@ def encrypt_password(key):
     m=sha1()
     m.update(key)
     return b64encode(m.digest())
-    #return key
 
 #generates a random token for a user session.
 def gen_token(size=20):
@@ -29,12 +30,13 @@ def gen_token(size=20):
 #verifies if token is correct for the given user
 def verify_token(username,token):
     return True
-    """
-    if username not in sessions.keys():
-        return False
 
-    return sessions[username]==token
-    """
+#returns username of logged in user, or None
+def verify_session():
+    if 'username' in session.keys():
+        return session['username']
+    else:
+        return None
 
 #returns html page for creating account
 def create_account_menu():
@@ -42,15 +44,25 @@ def create_account_menu():
 
 #returns the login screen
 def login_menu():
-    return render_template("login_page.html",loginerror="false")
+    username=verify_session()
+    if verify_session is not None:
+        return render_template('menu.html',username=username)
+
+    else:
+        return render_template("login_page.html",loginerror="false")
 
 #TODOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOoo
 def main_menu():
-    return render_template('main_page.html')
+    username=verify_session()
+
+    if username is None:
+        return render_template("login_page.html",loginerror="true")
+
+    return render_template('menu.html',username=username)
 
 #method for creating a new account.returns code 200 in case of success and 403 in case account exists
 def create_account(user):
-
+    print('session:'+str(session))
     print(user)
 
     username=str(user['email'])
@@ -68,6 +80,7 @@ def create_account(user):
 
 #change account info
 def edit_account(edituserinfo):
+    print(edituserinfo)
     username=edituserinfo['username']
     newemail=edituserinfo['newemail']
     newname=edituserinfo['newname']
@@ -87,7 +100,8 @@ def login(username,password):
         return render_template("login_page.html",loginerror="true"),403
     else:
         token=gen_token()
-        sessions[username]=token
+        session['username']=username
+        session['token']=token
         logging.info('login successful on account '+username)
         return render_template('menu.html'),200
 
@@ -318,13 +332,20 @@ def list_songs():
         return NoContent, 404
 
 
+logging.basicConfig(level=logging.INFO)
+dbsession=crud.get_session()
+
+app = connexion.App(__name__, specification_dir='swagger/')
+app.add_api('swagger.yaml')
+
+application=app.app
+
+
+@application.before_request
+def make_session_permanent():
+    session.permanent = True
+    application.permanent_session_lifetime = timedelta(minutes=5)
 
 if __name__=='__main__':
-    logging.basicConfig(level=logging.INFO)
-    session=crud.get_session()
-
-    app = connexion.App(__name__, specification_dir='swagger/')
-    app.add_api('swagger.yaml')
-
-    #app.app.secret_key('cenas lixadas')
+    application.secret_key='cenas lixadas'
     app.run(port=8000)
