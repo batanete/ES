@@ -45,8 +45,8 @@ def create_account_menu():
 #returns the login screen
 def login_menu():
     username=verify_session()
-    if verify_session is not None:
-        return render_template('menu.html',username=username)
+    if username is not None:
+        return render_template('menu.html',username=session['username'],name=session['name'],id=str(session['id']))
 
     else:
         return render_template("login_page.html",loginerror="false")
@@ -58,12 +58,13 @@ def main_menu():
     if username is None:
         return render_template("login_page.html",loginerror="true")
 
-    return render_template('menu.html',username=username)
+    return render_template('menu.html',username=session['username'],name=session['name'],id=str(session['id']))
 
 #method for creating a new account.returns code 200 in case of success and 403 in case account exists
 def create_account(user):
-    print('session:'+str(session))
-    print(user)
+    username=verify_session()
+    if username is not None:
+        return render_template('menu.html',username=session['username'],name=session['name'],id=str(session['id']))
 
     username=str(user['email'])
     name=str(user['name'])
@@ -80,6 +81,10 @@ def create_account(user):
 
 #change account info
 def edit_account(edituserinfo):
+    username=verify_session()
+    if username is None:
+        return render_template("login_page.html",loginerror="true")
+
     print(edituserinfo)
     username=edituserinfo['username']
     newemail=edituserinfo['newemail']
@@ -95,29 +100,26 @@ def edit_account(edituserinfo):
 
 #method for logging into an account. creates a new user session when successful.
 def login(username,password):
-    if not crud.verify_account(username,encrypt_password(password)):
+    acc=crud.verify_account(username,encrypt_password(password))
+
+    if acc is None:
         logging.warning('login failed on account '+username)
         return render_template("login_page.html",loginerror="true"),403
     else:
         token=gen_token()
-        session['username']=username
+        session['username']=acc['email']
+        session['name']=acc['name']
+        session['id']=acc['id']
         session['token']=token
         logging.info('login successful on account '+username)
-        return render_template('menu.html'),200
+        return render_template('menu.html',username=session['username'],name=session['name'],id=str(session['id'])),200
 
 #method for deleting a song uploaded by the user
 def delete_song(user_token,song_id):
-    username=user_token['username']
-    token=user_token['token']
+    username=verify_session()
 
-    sessions[username]=token
-
-    print(username,token)
-
-    if not verify_token(username,token):
-        logging.warning('user attempted forbidden request')
-        return NoContent,403
-
+    if username is None:
+        return render_template("login_page.html",loginerror="true")
 
     res=crud.delete_song(username,song_id)
     if res is None:
@@ -129,14 +131,10 @@ def delete_song(user_token,song_id):
 
 #method for disowning a song uploaded by the user
 def disown_song(user_token,song_id):
-    username=user_token['username']
-    token=user_token['token']
+    username=verify_session()
 
-    sessions[username]=token
-
-    if not verify_token(username,token):
-        logging.warning('user attempted forbidden request')
-        return NoContent,403
+    if username is None:
+        return render_template("login_page.html",loginerror="true")
 
 
     res=crud.disown_song(username,song_id)
@@ -150,14 +148,10 @@ def disown_song(user_token,song_id):
 
 #adds a song to playlist the user owns.
 def add_music_to_playlist(user_token,song_id,playlistid):
-    username=user_token['username']
-    token=user_token['token']
+    username=verify_session()
 
-    sessions[username]=token
-
-    if not verify_token(username,token):
-        logging.warning('user attempted forbidden request')
-        return NoContent,403
+    if username is None:
+        return render_template("login_page.html",loginerror="true")
 
 
     res=crud.add_music_to_playlist(username,songid,playlistid)
@@ -169,14 +163,10 @@ def add_music_to_playlist(user_token,song_id,playlistid):
         return NoContent,204
 
 def remove_music_from_playlist(user_token, song_id, playlist_id):
-    username=user_token['username']
-    token=user_token['token']
+    username=verify_session()
 
-    sessions[username]=token
-
-    if not verify_token(username,token):
-        logging.warning('user attempted forbidden request')
-        return NoContent,403
+    if username is None:
+        return render_template("login_page.html",loginerror="true")
 
     if crud.remove_music_from_playlist(playlist_id, song_id, username):
         logging.info("successfully deleted song")
@@ -190,11 +180,10 @@ def remove_music_from_playlist(user_token, song_id, playlist_id):
 #returns list of songs that follow a certain
 def search_song(username,token,criteria):
 
-    sessions[username]=token
+    username=verify_session()
 
-    if not verify_token(username,token):
-        logging.warning('user attempted forbidden request')
-        return NoContent,403
+    if username is None:
+        return render_template("login_page.html",loginerror="true")
 
     res=crud.search_song(criteria)
 
@@ -204,13 +193,10 @@ def search_song(username,token,criteria):
 ###
 #creates a new playlist
 def create_playlist(user_token, playlist_name):
-    username=user_token['username']
-    token=user_token['token']
-    sessions[username]=token
+    username=verify_session()
 
-    if not verify_token(username,token):
-        logging.warning('user attempted forbidden request')
-        return NoContent,403
+    if username is None:
+        return render_template("login_page.html",loginerror="true")
 
 
     logging.info("attempting to create playlist " +playlist_name)
@@ -224,13 +210,10 @@ def create_playlist(user_token, playlist_name):
 
 #edit the name of one playlist
 def edit_playlist_name(user_token, playlist_id, new_name):
-    username=user_token['username']
-    token=user_token['token']
-    sessions[username]=token
+    username=verify_session()
 
-    if not verify_token(username,token):
-        logging.warning('user attempted forbidden request')
-        return NoContent,403
+    if username is None:
+        return render_template("login_page.html",loginerror="true")
 
     logging.info("attempting to edit playlist name" +str(playlist_id) +" to " +new_name)
     username = "teste"
@@ -243,6 +226,12 @@ def edit_playlist_name(user_token, playlist_id, new_name):
 
 #list playlists created by user
 def list_playlists(username,order,token):
+
+    username=verify_session()
+
+    if username is None:
+        return render_template("login_page.html",loginerror="true")
+
     print("username:" +username+" order: "+order+" token: "+token)
     if not verify_token(username,token):
         logging.warning('user attempted forbidden request')
@@ -253,13 +242,10 @@ def list_playlists(username,order,token):
 
 #list the songs of a specific playlist !!!!
 def list_playlist_songs(user_token, playlist_id):
-    username=user_token['username']
-    token=user_token['token']
-    sessions[username]=token
+    username=verify_session()
 
-    if not verify_token(username,token):
-        logging.warning('user attempted forbidden request')
-        return NoContent,403
+    if username is None:
+        return render_template("login_page.html",loginerror="true")
 
 
     logging.info("attempting to list songs from playlist" +playlist_id)
@@ -273,15 +259,10 @@ def list_playlist_songs(user_token, playlist_id):
 
 #delete a playlist
 def delete_playlist(user_token, playlist_name):
-    username=user_token['username']
-    token=user_token['token']
-    sessions[username]=token
+    username=verify_session()
 
-    if not verify_token(username,token):
-        logging.warning('user attempted forbidden request')
-        return NoContent,403
-
-
+    if username is None:
+        return render_template("login_page.html",loginerror="true")
 
     logging.info("attempting to delete a playlist" +playlist_id)
     username = "teste"
@@ -294,13 +275,10 @@ def delete_playlist(user_token, playlist_name):
 
 #edit a song
 def edit_song(user_token, id_song, song_title, song_artist, song_year):
-    username=user_token['username']
-    token=user_token['token']
-    sessions[username]=token
+    username=verify_session()
 
-    if not verify_token(username,token):
-        logging.warning('user attempted forbidden request')
-        return NoContent,403
+    if username is None:
+        return render_template("login_page.html",loginerror="true")
 
     logging.info("attempting to edit song" +str(id_song))
     username = "teste"
@@ -313,14 +291,10 @@ def edit_song(user_token, id_song, song_title, song_artist, song_year):
 
 #list songs
 def list_songs():
-    username=user_token['username']
-    token=user_token['token']
-    sessions[username]=token
+    username=verify_session()
 
-    if not verify_token(username,token):
-        logging.warning('user attempted forbidden request')
-        return NoContent,403
-
+    if username is None:
+        return render_template("login_page.html",loginerror="true")
 
     logging.info("attempting to list songs")
     songs=crud.list_songs()

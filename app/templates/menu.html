@@ -1191,6 +1191,7 @@ class SaveSettings extends React.Component{
             newemail:$('#newemail').val(),
             newpassword:$('#newpassword').val(),
         }
+        var x="{{name}}"";
         $.ajax({
                 type: 'PUT',
                 url: home,

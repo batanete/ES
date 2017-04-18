@@ -34,7 +34,6 @@ def get_session():
     return session
 
 #attempts to create a new account.returns false in case account already exists.
-#TODO:ENCRIPTAR A PASSWORD ANTES DE CRIAR
 def create_account(name,email,password):
     acc=session.query(User).filter_by(email=email).first()
 
@@ -84,8 +83,11 @@ def list_playlists(username,order):
 #returns whether the given user credentials are correct
 def verify_account(username,password):
     acc=session.query(User).filter_by(email=username,password=password).first()
-
-    return (acc is not None)
+    
+    if acc is None:
+        return None
+    else:
+        return acc.to_json()
 
 #deletes a song from database, if the given user is the owner
 def delete_song(username,songid):
