@@ -1192,7 +1192,7 @@ class SaveSettings extends React.Component{
             newpassword:$('#newpassword').val(),
         }
         $.ajax({
-                type: 'GET',
+                type: 'PUT',
                 url: home,
                 dataType: 'text',
                 data: JSON.stringify(dat),
