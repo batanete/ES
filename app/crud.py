@@ -1,6 +1,7 @@
 import os
 import sys
 from entities import *
+from sqlalchemy import or_
 from datetime import datetime
 session=None
 engine=None
