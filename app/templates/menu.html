@@ -761,7 +761,7 @@ class MainComponent extends React.Component{
             'home':'',
             'settings':<SaveSettings/>,
             'musics':'musics',
-            'playlists':'playlists'
+            'playlists':<Playlists/>
         };
 
 
@@ -833,6 +833,8 @@ class MainComponent extends React.Component{
 
 }
 
+
+
 class SideBar extends React.Component{
     constructor(props){
         super(props);
@@ -885,6 +887,41 @@ class SideBar extends React.Component{
 
 }
 
+class Playlists extends React.Component{
+    clicked(){
+        console.log("A entrar no render Playlists")
+        var home='http://localhost:8000/account/playlist/list';
+        var get_username = "bata@gmail.com"
+        var get_token = "token"
+        var order_selected = "asc"
+        var dat={
+            username:get_username,
+            token:get_token,
+            order: order_selected
+        }
+        $.ajax({
+                type: 'GET',
+                url: home,
+                dataType: 'text',
+                data: JSON.stringify(dat),
+                contentType: 'application/json',
+                success: function(data) {
+					alert("Playlists listed successfully");
+
+                }.bind(this),
+                error: function(xhr, status, err) {
+                   alert("Problem in listing playlists.");
+                }.bind(this)
+        }
+        );
+    }
+    render(){
+        return(
+            <p>TESTE</p>
+        )
+    }
+}
+
 class SaveSettings extends React.Component{
     clicked(){
         var home='http://localhost:8000/account/edit';
@@ -898,7 +935,7 @@ class SaveSettings extends React.Component{
             newpassword:$('#newpassword').val(),
         }
         $.ajax({
-                type: 'PUT',
+                type: 'GET',
                 url: home,
                 dataType: 'text',
                 data: JSON.stringify(dat),
