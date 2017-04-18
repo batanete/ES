@@ -29,7 +29,7 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(50), nullable=False)
     email = Column(String(50), nullable=False,unique=True)
-    password = Column(String(50), nullable=False)
+    password = Column(String(250), nullable=False)
 
     playlists = relationship("Playlist", back_populates="owner")
     songs = relationship("Song", back_populates="uploader")

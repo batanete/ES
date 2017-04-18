@@ -8,7 +8,7 @@ import connexion
 from connexion import NoContent
 from flask import render_template
 from hashlib import sha1
-
+from base64 import b64encode
 import crud
 
 sessions={}
@@ -16,11 +16,11 @@ sessions={}
 
 #returns a password's hash according to sha1
 def encrypt_password(key):
-    print('key:'+str(key))
+    
     m=sha1()
     m.update(key)
-    #return m.digest()
-    return key
+    return b64encode(m.digest())
+    #return key
 
 #generates a random token for a user session.
 def gen_token(size=20):
