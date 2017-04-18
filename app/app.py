@@ -6,7 +6,7 @@ import string
 
 import connexion
 from connexion import NoContent
-from flask import render_template
+from flask import render_template,session
 from hashlib import sha1
 from base64 import b64encode
 import crud
@@ -16,7 +16,7 @@ sessions={}
 
 #returns a password's hash according to sha1
 def encrypt_password(key):
-    
+
     m=sha1()
     m.update(key)
     return b64encode(m.digest())
@@ -325,4 +325,6 @@ if __name__=='__main__':
 
     app = connexion.App(__name__, specification_dir='swagger/')
     app.add_api('swagger.yaml')
+
+    app.app.secret_key('cenas lixadas')
     app.run(port=8000)
