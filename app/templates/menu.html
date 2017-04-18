@@ -953,12 +953,10 @@ class singlePlaylist extends React.Component{
 class Playlists extends React.Component{
     constructor(props){
         super(props);
-        this.state={playlists:[]};
-        this.get_playlists();
-        //this.getplays();
-        console.log('fim construtor')
+        //this.state={playlists:[]};
+        //this.get_playlists();
+        this.getplays();
     }
-
     getplays(){
         console.log("A entrar no render Playlists")
         this.state={playlists:[{name:'master of puppets',date:1984}]};
@@ -977,35 +975,30 @@ class Playlists extends React.Component{
         $.ajax({
                 type: 'GET',
                 url: home,
-                //dataType: 'text',
-                data: dat,
+                dataType: 'text',
+                data: JSON.stringify(dat),
                 contentType: 'application/json',
                 success: function(data) {
-                    console.log('data: '+data)
-                    this.setState({playlists:data});
 					alert("Playlists listed successfully");
 
                 }.bind(this),
                 error: function(xhr, status, err) {
                    alert("Problem in listing playlists.");
-                   this.setState({playlists:[]});
                 }.bind(this)
         }
         );
     }
-
-
     render(){
         //get_playlists();
         var playlistNodes=[];
         for(var i = 0; i < this.state.playlists.lenght; i += 1){
             console.log(this.state.playlists[i]);
             playlistNodes.push(
-                    <Playlist name={this.state.playlists[i]} />
+                    <Playlist name={this.state.playlists[i].name} date={this.state.playlists[i].date}>
+                    </Playlist>
             );
         }
         return(
-
             <div className="container">
             	<div className="row">
 
@@ -1198,7 +1191,7 @@ class SaveSettings extends React.Component{
             newemail:$('#newemail').val(),
             newpassword:$('#newpassword').val(),
         }
-        var x="{{name}}"";
+
         $.ajax({
                 type: 'PUT',
                 url: home,
