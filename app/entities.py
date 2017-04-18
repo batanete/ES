@@ -54,11 +54,11 @@ class Playlist(Base):
     name = Column(String(50), nullable=False)
 
     owner_id = Column(Integer, ForeignKey('users.id'))
-    
+
     creation_date=Column(Date,nullable=False)
-    
+
     owner = relationship("User", back_populates="playlists")
-    
+
 
     songs=relationship("Song",
                     secondary=association_songs_playlists,

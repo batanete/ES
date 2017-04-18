@@ -911,8 +911,24 @@ class SideBar extends React.Component{
 
 }
 
+class singlePlaylist extends React.Component{
+    render(){
+        return(
+            <div className="singlePlaylist">
+                <p>title:{this.props.name} creation_date: {this.props.creation_date}</p>
+            </div>
+        );
+    }
+}
+
+
 class Playlists extends React.Component{
-    clicked(){
+    constructor(props){
+        super(props);
+        this.state={playlists:[]};
+        this.get_playlists();
+    }
+    get_playlists(){
         console.log("A entrar no render Playlists")
         var home='http://localhost:8000/account/playlist/list';
         var get_username = "bata@gmail.com"
@@ -927,11 +943,11 @@ class Playlists extends React.Component{
                 type: 'GET',
                 url: home,
                 dataType: 'text',
-                data: JSON.stringify(dat),
+                data: dat,
                 contentType: 'application/json',
                 success: function(data) {
-					alert("Playlists listed successfully");
-
+					//alert("Playlists listed successfully");
+                    this.setState()
                 }.bind(this),
                 error: function(xhr, status, err) {
                    alert("Problem in listing playlists.");
@@ -940,10 +956,28 @@ class Playlists extends React.Component{
         );
     }
     render(){
+        //get_playlists();
+        var playlistNodes=[];
+        for(var i = 0; i < this.state.playlists.lenght; i += 1){
+            console.log(this.state.playlists[i]);
+            playlistNodes.push(
+                <div>
+                    <Playlist name={this.state.playlists[i].name} date={this.state.playlists[i].date}>
+
+                    </Playlist>
+                    <br></br>
+                </div>
+            );
+        }
         return(
             <p>TESTE</p>
         )
     }
+    /*render(){
+        return(
+            <p>TESTE</p>
+        )
+    }*/
 }
 
 class Musics extends React.Component{

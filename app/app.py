@@ -229,8 +229,7 @@ def edit_playlist_name(user_token, playlist_id, new_name):
 
 #list playlists created by user
 def list_playlists(username,order,token):
-
-
+    print("username:" +username+" order: "+order+" token: "+token)
     if not verify_token(username,token):
         logging.warning('user attempted forbidden request')
         return NoContent,403
