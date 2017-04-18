@@ -89,6 +89,19 @@ paths:
           description: Login successful
         403:
           description: Login failed
+
+  /account/logout:
+    get:
+      tags: [Logout]
+      operationId: app.logout
+      summary: logout
+      produces:
+        - text/html
+
+      responses:
+        200:
+          description: Login successful
+
   /song:
     get:
       tags: [Search_song]

@@ -105,6 +105,14 @@ def login(username,password):
         logging.info('login successful on account '+username)
         return render_template('menu.html'),200
 
+def logout():
+    print("logout")
+    print("ses: "+session['username'])
+    session.pop('username')
+    session.pop('token')
+
+    return render_template('login_page.html'), 200
+
 #method for deleting a song uploaded by the user
 def delete_song(user_token,song_id):
     username=user_token['username']
@@ -344,7 +352,7 @@ application=app.app
 @application.before_request
 def make_session_permanent():
     session.permanent = True
-    application.permanent_session_lifetime = timedelta(minutes=5)
+    application.permanent_session_lifetime = timedelta(minutes=1)
 
 if __name__=='__main__':
     application.secret_key='cenas lixadas'
