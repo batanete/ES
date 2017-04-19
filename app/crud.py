@@ -83,7 +83,7 @@ def list_playlists(username,order):
 #returns whether the given user credentials are correct
 def verify_account(username,password):
     acc=session.query(User).filter_by(email=username,password=password).first()
-    
+
     if acc is None:
         return None
     else:

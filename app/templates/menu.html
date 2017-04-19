@@ -821,15 +821,13 @@ class MainComponent extends React.Component{
                             <div className="header-rightside">
                                 <ul className="list-inline header-top pull-right">
                                     <li className="dropdown">
-                                        <a href="#" className="dropdown-toggle" data-toggle="dropdown"><p>user</p>
+                                        <a href="#" className="dropdown-toggle" data-toggle="dropdown"><p>{{username}}</p>
                                             <b className="caret"></b></a>
                                         <ul className="dropdown-menu">
                                             <li>
                                                 <div className="navbar-content">
-                                                    <span>JS Krishna</span>
-                                                    <p className="text-muted small">
-                                                        me@jskrishna.com
-                                                    </p>
+                                                    <span>{{username}}</span>
+
                                                     <div className="divider">
                                                     </div>
                                                         <form className="view btn-sm active" action="/account/logout">
@@ -913,9 +911,10 @@ class SideBar extends React.Component{
 
 }
 
-class singlePlaylist extends React.Component{
+class SinglePlaylist extends React.Component{
     constructor(props){
         super(props);
+        //console.log("singlePlaylist: " + this.props.name)
     }
     render(){
         return(
@@ -937,12 +936,11 @@ class singlePlaylist extends React.Component{
                             <img src="https://s3.amazonaws.com/uifaces/faces/twitter/fffabs/128.jpg" className="media-photo" />
                         </a>
                         <div className="media-body">
-                            <span className="media-meta pull-right">Febrero 13, 2016</span>
                             <h4 className="title">
-                                {this.props.name}
-                                <span className="pull-right pagado">(Pagado)</span>
+                                Name: {this.props.data}
+                                <span className="pull-right pagado">({this.props.data})</span>
                             </h4>
-                            <p className="summary">Ut enim ad minim veniam, quis nostrud exercitation...</p>
+
                         </div>
                     </div>
                 </td>
@@ -956,9 +954,37 @@ class singlePlaylist extends React.Component{
 class Playlists extends React.Component{
     constructor(props){
         super(props);
-        //this.state={playlists:[]};
-        //this.get_playlists();
-        this.getplays();
+        this.state={playlists:[]};
+        this.get_playlists();
+        //this.getplays();
+    }
+    clicked(){
+        var home='http://localhost:8000/account/create_playlist';
+        var playlist_name = $("#playlist_name").val();
+        console.log("value: "+playlist_name);
+        var get_token = "token"
+        var dat={
+            name: $("#playlist_name").val(),
+        }
+
+        $.ajax({
+                type: 'POST',
+                url: home,
+
+                data: JSON.stringify(dat),
+                contentType: 'application/json',
+                success: function(data) {
+					alert("playlist created successfully");
+                    //this.setState({});
+
+                }.bind(this),
+                error: function(xhr, status, err) {
+                   alert("Problem in creating information.");
+                }.bind(this)
+        }
+
+        );
+
     }
     getplays(){
         console.log("A entrar no render Playlists")
@@ -967,38 +993,41 @@ class Playlists extends React.Component{
     get_playlists(){
         console.log("A entrar no render Playlists")
         var home='http://localhost:8000/account/playlist/list';
-        var get_username = "bata@gmail.com"
+        var get_username = "{{username}}"
         var get_token = "token"
         var order_selected = "asc"
         var dat={
-            username:get_username,
-            token:get_token,
-            order: order_selected
         }
         $.ajax({
                 type: 'GET',
                 url: home,
-                dataType: 'text',
-                data: JSON.stringify(dat),
+                data: dat,
                 contentType: 'application/json',
                 success: function(data) {
-					alert("Playlists listed successfully");
+                    console.log("data: " +data)
+					//alert("Playlists listed successfully");
+                    this.setState({playlists:data});
 
                 }.bind(this),
                 error: function(xhr, status, err) {
                    alert("Problem in listing playlists.");
+                   this.setState({playlists:[]});
                 }.bind(this)
+
         }
         );
     }
+
     render(){
         //get_playlists();
         var playlistNodes=[];
-        for(var i = 0; i < this.state.playlists.lenght; i += 1){
-            console.log(this.state.playlists[i]);
+        console.log("inside render")
+        console.log("playlists: "+this.state.playlists.length)
+        for(var i = 0; i < this.state.playlists.length; i += 1){
+            console.log("data2 :"+this.state.playlists[i]);
             playlistNodes.push(
-                    <Playlist name={this.state.playlists[i].name} date={this.state.playlists[i].date}>
-                    </Playlist>
+
+                    <SinglePlaylist key={i} data={this.state.playlists[i]}/>
             );
         }
         return(
@@ -1006,7 +1035,11 @@ class Playlists extends React.Component{
             	<div className="row">
 
             		<section className="content">
-            			<h1>Table Filter</h1>
+            			<h1>Playlists</h1>
+                        <div className="form-group ">
+                            Playlist Name: <input type="text" name="playlist_name" id = "playlist_name"/><br/>
+                            <button type="button" className="btn btn-primary btn-lg btn-block login-button" onClick={this.clicked}  >Create Playlist</button>
+                        </div>
             			<div className="col-md-8 col-md-offset-2">
             				<div className="panel panel-default">
             					<div className="panel-body">
@@ -1149,7 +1182,7 @@ class Musics extends React.Component{
             	<div className="row">
 
             		<section className="content">
-            			<h1>Table Filter</h1>
+            			<h1>Musics</h1>
             			<div className="col-md-8 col-md-offset-2">
             				<div className="panel panel-default">
             					<div className="panel-body">
@@ -1185,7 +1218,7 @@ class Musics extends React.Component{
 class SaveSettings extends React.Component{
     clicked(){
         var home='http://localhost:8000/account/edit';
-        var get_username = "bata@gmail.com"
+        var get_username = "{{username}}"
         var get_token = "token"
         var dat={
             username:get_username,
@@ -1217,23 +1250,18 @@ class SaveSettings extends React.Component{
 
             <div className="SaveSettings">
             <div className="user-dashboard">
-                <h1>Hello, JS</h1>
+                <h1>Hello, {{username}}</h1>
                 <div className="row">
                     <div className="col-md-5 col-sm-5 col-xs-12 gutter">
                         <div className="sales">
                             <h2>Current Information</h2>
 
                         </div>
-                        <div class="form-group">
-                            <label for="name" class="cols-sm-2 control-label">Current Name:</label>
-                            <div class="cols-sm-10">
-                                <label for="name" class="cols-sm-2 control-label">Name</label>
-                            </div>
-                        </div>
+
                         <div class="form-group">
                             <label for="name" class="cols-sm-2 control-label">Current Email:</label>
                             <div class="cols-sm-10">
-                                <label for="name" class="cols-sm-2 control-label">email@email.com</label>
+                                <label for="name" class="cols-sm-2 control-label">"{{username}}"</label>
                             </div>
                         </div>
                     </div>
