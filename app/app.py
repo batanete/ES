@@ -221,20 +221,20 @@ def search_song(username,token,criteria):
 ###
 ###
 #creates a new playlist
-def create_playlist(user_token, playlist_name):
+def create_playlist(playlist_name):
+    print("name: ", playlist_name)
     username=verify_session()
 
     if username is None:
         return NoContent,403
 
-
-    logging.info("attempting to create playlist " +playlist_name)
+    logging.info("attempting to create playlist " ,playlist_name)
     #username = "teste"
-    if crud.create_playlist(playlist_name, username):
-        logging.info("successfully created playlist "+playlist_name)
-        return NoContent, 200
+    if crud.create_playlist(playlist_name['name'], username):
+        logging.info("successfully created playlist ",playlist_name)
+        return render_template('menu.html',username=session['username'],name=session['name'],id=str(session['id']))
     else:
-        logging.warning("failed to create playlist "+playlist_name+".playlist already exists")
+        logging.warning("failed to create playlist")
         return NoContent, 400
 
 #edit the name of one playlist
@@ -254,17 +254,14 @@ def edit_playlist_name(user_token, playlist_id, new_name):
         return NoContent, 404
 
 #list playlists created by user
-def list_playlists(username,order,token):
-
+def list_playlists():
+    order = 'a'
     username=verify_session()
 
     if username is None:
         return NoContent,403
 
-    print("username:" +username+" order: "+order+" token: "+token)
-    if not verify_token(username,token):
-        logging.warning('user attempted forbidden request')
-        return NoContent,403
+    #print("username:" +username+" order: "+order+" token: "+token)
 
 
     return crud.list_playlists(username,order),200
