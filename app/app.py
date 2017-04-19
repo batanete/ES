@@ -62,9 +62,6 @@ def main_menu():
 
 #method for creating a new account.returns code 200 in case of success and 403 in case account exists
 def create_account(user):
-    username=verify_session()
-    if username is not None:
-        return render_template('menu.html',username=session['username'],name=session['name'],id=str(session['id']))
 
     username=str(user['email'])
     name=str(user['name'])
@@ -83,7 +80,7 @@ def create_account(user):
 def edit_account(edituserinfo):
     username=verify_session()
     if username is None:
-        return render_template("login_page.html",loginerror="true")
+        return NoContent,403
 
     print(edituserinfo)
     username=edituserinfo['username']
@@ -127,7 +124,7 @@ def delete_song(user_token,song_id):
     username=verify_session()
 
     if username is None:
-        return render_template("login_page.html",loginerror="true")
+        return NoContent,403
 
     res=crud.delete_song(username,song_id)
     if res is None:
@@ -142,7 +139,7 @@ def disown_song(user_token,song_id):
     username=verify_session()
 
     if username is None:
-        return render_template("login_page.html",loginerror="true")
+        return NoContent,403
 
 
     res=crud.disown_song(username,song_id)
@@ -159,8 +156,7 @@ def add_music_to_playlist(user_token,song_id,playlistid):
     username=verify_session()
 
     if username is None:
-        return render_template("login_page.html",loginerror="true")
-
+        return NoContent,403
 
     res=crud.add_music_to_playlist(username,songid,playlistid)
     if res is None:
@@ -174,7 +170,7 @@ def remove_music_from_playlist(user_token, song_id, playlist_id):
     username=verify_session()
 
     if username is None:
-        return render_template("login_page.html",loginerror="true")
+        return NoContent,403
 
     if crud.remove_music_from_playlist(playlist_id, song_id, username):
         logging.info("successfully deleted song")
@@ -191,7 +187,7 @@ def search_song(username,token,criteria):
     username=verify_session()
 
     if username is None:
-        return render_template("login_page.html",loginerror="true")
+        return NoContent,403
 
     res=crud.search_song(criteria)
 
@@ -204,7 +200,7 @@ def create_playlist(user_token, playlist_name):
     username=verify_session()
 
     if username is None:
-        return render_template("login_page.html",loginerror="true")
+        return NoContent,403
 
 
     logging.info("attempting to create playlist " +playlist_name)
@@ -221,7 +217,7 @@ def edit_playlist_name(user_token, playlist_id, new_name):
     username=verify_session()
 
     if username is None:
-        return render_template("login_page.html",loginerror="true")
+        return NoContent,403
 
     logging.info("attempting to edit playlist name" +str(playlist_id) +" to " +new_name)
     username = "teste"
@@ -238,7 +234,7 @@ def list_playlists(username,order,token):
     username=verify_session()
 
     if username is None:
-        return render_template("login_page.html",loginerror="true")
+        return NoContent,403
 
     print("username:" +username+" order: "+order+" token: "+token)
     if not verify_token(username,token):
@@ -253,7 +249,7 @@ def list_playlist_songs(user_token, playlist_id):
     username=verify_session()
 
     if username is None:
-        return render_template("login_page.html",loginerror="true")
+        return NoContent,403
 
 
     logging.info("attempting to list songs from playlist" +playlist_id)
@@ -270,7 +266,7 @@ def delete_playlist(user_token, playlist_name):
     username=verify_session()
 
     if username is None:
-        return render_template("login_page.html",loginerror="true")
+        return NoContent,403
 
     logging.info("attempting to delete a playlist" +playlist_id)
     username = "teste"
@@ -286,7 +282,7 @@ def edit_song(user_token, id_song, song_title, song_artist, song_year):
     username=verify_session()
 
     if username is None:
-        return render_template("login_page.html",loginerror="true")
+        return NoContent,403
 
     logging.info("attempting to edit song" +str(id_song))
     username = "teste"
@@ -302,7 +298,7 @@ def list_songs():
     username=verify_session()
 
     if username is None:
-        return render_template("login_page.html",loginerror="true")
+        return NoContent,403
 
     logging.info("attempting to list songs")
     songs=crud.list_songs()
