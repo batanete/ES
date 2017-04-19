@@ -919,17 +919,8 @@ class SinglePlaylist extends React.Component{
     render(){
         return(
                 <tr data-status="pagado">
-                <td>
-                    <div className="ckbox">
-                        <input type="checkbox" id="checkbox1"/>
-                        <label for="checkbox1"></label>
-                    </div>
-                </td>
-                <td>
-                    <a href="javascript:;" className="star">
-                        <i className="glyphicon glyphicon-star"></i>
-                    </a>
-                </td>
+
+
                 <td>
                     <div className="media">
                         <a href="#" className="pull-left">
@@ -955,7 +946,9 @@ class Playlists extends React.Component{
     constructor(props){
         super(props);
         this.state={playlists:[]};
+        this.get_playlists=this.get_playlists.bind(this);
         this.get_playlists();
+
         //this.getplays();
     }
     clicked(){
@@ -976,6 +969,7 @@ class Playlists extends React.Component{
                 success: function(data) {
 					alert("playlist created successfully");
                     //this.setState({});
+                    //window.location.reload(true);
 
                 }.bind(this),
                 error: function(xhr, status, err) {
@@ -984,8 +978,8 @@ class Playlists extends React.Component{
         }
 
         );
-
     }
+
     getplays(){
         console.log("A entrar no render Playlists")
         this.state={playlists:[{name:'master of puppets',date:1984}]};
@@ -1016,6 +1010,10 @@ class Playlists extends React.Component{
 
         }
         );
+    }
+    componentDidMount(){
+        console.log("componentDidMount")
+        this.interval = setInterval(this.get_playlists, 1000);
     }
 
     render(){

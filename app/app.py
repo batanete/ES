@@ -14,7 +14,7 @@ import crud
 from datetime import timedelta
 
 
-UPLOAD_FOLDER='/home/bata/uploaded_songs/'
+UPLOAD_FOLDER='/home/hsilveiro/uploaded_songs/'
 
 
 #returns a password's hash according to sha1

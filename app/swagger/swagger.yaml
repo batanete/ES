@@ -122,7 +122,7 @@ paths:
         200:
           description: Login successful
         403:
-          description: Login failed
+          description: Login failedsubl
 
   /account/logout:
     get:
