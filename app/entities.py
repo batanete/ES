@@ -85,4 +85,4 @@ class Song(Base):
         back_populates="songs")
 
     def to_json(self):
-        return {'id':self.id, 'title':self.title,'album': self.album,'artist':self.artist, 'year':self.year, 'uploader':self.uploader_id}
+        return {'id':self.id, 'title':self.title,'album': self.album,'artist':self.artist, 'year':self.year, 'uploader_id':self.uploader_id}

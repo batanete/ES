@@ -166,13 +166,10 @@ paths:
       operationId: app.disown_song
       summary: Disown a song
       parameters:
-        - name: user_token
+        - name: song_id
           in: body
           schema:
-            $ref: '#/definitions/User_token'
-        - name: song_id
-          in: query
-          type: integer
+            $ref: '#/definitions/SongID'
       responses:
         204:
           description: Song was disowned
@@ -350,27 +347,15 @@ paths:
           description: User is not logged in
 
   /account/edit_song:
-    post:
+    put:
       tags: [edit_song]
       operationId: app.edit_song
-      summary: delete playlist
+      summary: edit song
       parameters:
-        - name: id_song
-          in: query
-          type: integer
-        - name: song_title
-          in: query
-          type: string
-        - name: song_artist
-          in: query
-          type: string
-        - name: song_year
-          in: query
-          type: string
-        - name: user_token
+        - name: newsongdata
           in: body
           schema:
-            $ref: '#/definitions/User_token'
+            $ref: '#/definitions/EditSong'
       responses:
         200:
           description: Song edited
@@ -400,6 +385,47 @@ paths:
 
 
 definitions:
+  EditSong:
+    type: object
+    required:
+      - id
+      - newtitle
+      - newalbum
+      - newartist
+      - newyear
+    properties:
+      id:
+        type: integer
+        description: Song id
+        example: 1
+      newtitle:
+        type: string
+        description: new song title
+        example: 1
+      newyear:
+        type: integer
+        description: new song year
+        example: 1
+      newartist:
+        type: string
+        description: new song artist
+        example: 1
+      newalbum:
+        type: string
+        description: new song album
+        example: 1
+
+
+  SongID:
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        type: integer
+        description: Song id
+        example: 1
+
   User_token:
     type: object
     required:
