@@ -135,7 +135,6 @@ def disown_song(username,songid):
         return False
 
     s=session.query(Song).get(songid)
-
     #song doesn't exist
     if s is None:
         return None
@@ -260,22 +259,30 @@ def delete_playlist(playlist_name, username):
             session.commit()
             return True
 
-def edit_song(id_song, song_title, song_artist, song_year, username):
+def edit_song(id_song, song_title, song_artist, song_year,song_album, username):
+
     acc_user=session.query(User).filter_by(email=username).first()
     if acc_user is None:
         return False
     else:
         #owd_id = acc_user.id
-        get_song=session.query(Song).filter_by(owner=acc_user, id=id_song).first()
+        print('chega aqui')
+        get_song=session.query(Song).filter_by(uploader=acc_user, id=id_song).first()
 
         if get_song is None:
             return False
         else:
-            get_song.title = song_title
-            get_song.artist = song_artist
-            get_song.year = song_year
-            session.commit()
-            return True
+            try:
+                get_song.title = song_title
+                get_song.artist = song_artist
+                get_song.year = song_year
+                get_song.album=song_album
+                session.commit()
+                return True
+            except Exception as e:
+                session.rollback()
+                print(e)
+                return False
 
 def list_songs():
     songs = session.query(Song).all()

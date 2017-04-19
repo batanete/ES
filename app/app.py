@@ -160,14 +160,16 @@ def delete_song(user_token,song_id):
         return NoContent,403
 
 #method for disowning a song uploaded by the user
-def disown_song(user_token,song_id):
+def disown_song(song_id):
+
+    id=song_id['id']
     username=verify_session()
 
     if username is None:
         return NoContent,403
 
 
-    res=crud.disown_song(username,song_id)
+    res=crud.disown_song(username,id)
     if res is None:
         return NoContent,404
     elif res:
@@ -300,19 +302,26 @@ def delete_playlist(user_token, playlist_name):
         return NoContent, 404
 
 #edit a song
-def edit_song(user_token, id_song, song_title, song_artist, song_year):
+def edit_song(newsongdata):
+    print('entra no edit')
     username=verify_session()
 
     if username is None:
         return NoContent,403
 
-    logging.info("attempting to edit song" +str(id_song))
-    username = "teste"
-    if crud.edit_song(id_song, song_title, song_artist, song_year, username):
-        logging.info("successfully edited song "+str(id_song))
+    id=newsongdata['id']
+    title=newsongdata['newtitle']
+    artist=newsongdata['newartist']
+    year=newsongdata['newyear']
+    album=newsongdata['newalbum']
+
+
+    logging.info("attempting to edit song" +str(id))
+    if crud.edit_song(id, title, artist, year,album, username):
+        logging.info("successfully edited song "+str(id))
         return NoContent, 200
     else:
-        logging.warning("failed to edit song "+str(id_song))
+        logging.warning("failed to edit song "+str(id))
         return NoContent, 404
 
 #list songs

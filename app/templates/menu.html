@@ -1069,51 +1069,199 @@ class Playlists extends React.Component{
 }
 
 
-
-class Music extends React.Component{
-
+class MusicEditor extends React.Component{
     constructor(props){
         super(props);
+
+        this.confirm=this.confirm.bind(this);
+        this.disown=this.disown.bind(this);
+    }
+
+    confirm(){
+
+        var newyear=parseInt($('#new_year').val());
+        if(isNaN(newyear)){
+            alert('year must be integer');
+            return;
+        }
+
+        var home="http://localhost:8000/account/edit_song";
+        var id=this.props.id;
+        var newtitle=$('#new_title').val()
+        var newalbum=$('#new_album').val()
+        var newartist=$('#new_artist').val()
+        console.log('id:'+id);
+        console.log('newtitle:'+newtitle);
+        console.log('newalbum:'+newalbum);
+        console.log('newartist:'+newartist);
+        console.log('newyear:'+newyear);
+
+        var dat={
+            id: id,
+            newtitle:newtitle,
+            newartist:newartist,
+            newalbum:newalbum,
+            newyear:newyear
+        };
+
+        $.ajax({
+                type: 'PUT',
+                url: home,
+                dataType: 'text',
+                data: JSON.stringify(dat),
+                contentType: 'application/json',
+                success: function(data) {
+					alert("music edited successfully");
+
+                }.bind(this),
+                error: function(xhr, status, err) {
+                   alert("Couldn't edit song.");
+                }.bind(this)
+            }
+        );
+
+
+    }
+
+    disown(){
+        var home="http://localhost:8000/song";
+        var id=this.props.id;
+
+        var dat={
+            id: this.props.id
+        };
+
+        $.ajax({
+                type: 'PUT',
+                url: home,
+                dataType: 'text',
+                data: JSON.stringify(dat),
+                contentType: 'application/json',
+                success: function(data) {
+					alert("music disowned successfully");
+                    window.location.reload(true);
+                }.bind(this),
+                error: function(xhr, status, err) {
+                   alert("Couldn't disown song.");
+                }.bind(this)
+            }
+        );
 
     }
 
     render(){
         return(
-                <tr data-status="pagado">
-                <td>
-                    <div className="ckbox">
-                        <input type="checkbox" id="checkbox1"/>
-                        <label for="checkbox1"></label>
-                    </div>
-                </td>
-                <td>
-                    <a href="javascript:;" className="star">
-                        <i className="glyphicon glyphicon-star"></i>
-                    </a>
-                </td>
-                <td>
-                    <div className="media">
-                        <a href="#" className="pull-left">
-                            <img src="https://s3.amazonaws.com/uifaces/faces/twitter/fffabs/128.jpg" className="media-photo" />
-                        </a>
-                        <div className="media-body">
-                            <h4 className="title">
-                                title: {this.props.data.title}
-                                <span className="pull-right pagado">({this.props.data.year})</span>
-                            </h4>
-                            <p className="summary">artist: {this.props.data.artist}
-                                <br/>
-                                album: {this.props.data.album}
-                                    <br/>
-                                uploader: {this.props.mymusic=="true" ? "you" : this.props.data.id}
-
-                            </p>
-                        </div>
-                    </div>
-                </td>
-                </tr>
-
+            <div className="form-group ">
+                New Title: <input type="text" name="new_title" id = "new_title"/><br/>
+                New Album: <input type="text" name="new_album" id = "new_album"/><br/>
+                New Year: <input type="text" name="new_year" id = "new_year"/><br/>
+                New Artist: <input type="text" name="new_artist" id = "new_artist"/><br/>
+                <button type="button" className="btn btn-primary btn-lg btn-block login-button" onClick={this.confirm}  >edit</button>
+                <button type="button" className="btn btn-primary btn-lg btn-block login-button" onClick={this.disown}  >disown</button>
+            </div>
         );
+    }
+}
+
+class Music extends React.Component{
+
+    constructor(props){
+        super(props);
+        this.state={editor:false};
+
+        this.editorToggle=this.editorToggle.bind(this);
+    }
+
+    editorToggle(){
+        if(this.props.mymusic=="false"){
+            console.log('nao e meu');
+            return;
+        }
+        console.log("chega aqui");
+        this.setState({editor:!(this.state.editor)});
+    }
+
+    render(){
+        var editor=<MusicEditor id={this.props.data.id}/>;
+        if(this.state.editor==true){
+            console.log("entra no true");
+            return(
+                    <tr data-status="pagado" >
+
+                    <td>
+                        <a href="javascript:;" className="star">
+                            <i className="glyphicon glyphicon-star"></i>
+                        </a>
+                    </td>
+                    <td onClick={this.editorToggle}>
+                        <div className="media">
+                            <a href="#" className="pull-left">
+                                <img src="https://sites.google.com/site/eduquemusica/_/rsrc/1472857283365/conteudo/avaliacoes/Clave-de-sol.jpg?height=200&width=200" className="media-photo" />
+                            </a>
+                            <div className="media-body">
+                                <h4 className="title">
+                                    title: {this.props.data.title}
+                                    <span className="pull-right pagado">({this.props.data.year})</span>
+                                </h4>
+                                <p className="summary">artist: {this.props.data.artist}
+                                    <br/>
+                                    <div id="albumdiv" onClick={this.cenas}>
+                                    album: {this.props.data.album}
+                                    </div>
+                                        <br/>
+                                    uploader: {this.props.mymusic=="true" ? "you" : this.props.data.id}
+
+                                </p>
+
+                            </div>
+                        </div>
+                    </td>
+                    {editor}
+                    </tr>
+
+            );
+        }
+        else {
+            return(
+                    <tr data-status="pagado" onClick={this.editorToggle}>
+                    <td>
+                        <div className="ckbox">
+                            <input type="checkbox" id="checkbox1"/>
+                            <label for="checkbox1"></label>
+                        </div>
+                    </td>
+                    <td>
+                        <a href="javascript:;" className="star">
+                            <i className="glyphicon glyphicon-star"></i>
+                        </a>
+                    </td>
+                    <td>
+                        <div className="media">
+                            <a href="#" className="pull-left">
+                                <img src="https://sites.google.com/site/eduquemusica/_/rsrc/1472857283365/conteudo/avaliacoes/Clave-de-sol.jpg?height=200&width=200" className="media-photo" />
+                            </a>
+                            <div className="media-body">
+                                <h4 className="title">
+                                    title: {this.props.data.title}
+                                    <span className="pull-right pagado">({this.props.data.year})</span>
+                                </h4>
+                                <p className="summary">artist: {this.props.data.artist}
+                                    <br/>
+                                    <div id="albumdiv" onClick={this.cenas}>
+                                    album: {this.props.data.album}
+                                    </div>
+                                        <br/>
+                                    uploader: {this.props.mymusic=="true" ? "you" : this.props.data.id}
+
+                                </p>
+
+                            </div>
+                        </div>
+                    </td>
+                    </tr>
+
+            );
+        }
     }
 
 
@@ -1211,7 +1359,7 @@ class Musics extends React.Component{
             // ... Other options like success and etc
             success: function(data) {
                 alert("song uploaded successfully");
-
+                window.location.reload(true);
             }.bind(this),
             error: function(xhr, status, err) {
                alert("Problem uploading song.");
@@ -1318,7 +1466,7 @@ class Musics extends React.Component{
         console.log('data2:'+this.state.listmusics);
         for(var i=0;i<this.state.listmusics.length;i+=1){
             console.log('data2:'+this.state.listmusics[i]);
-            if(this.state.listmusics[i].id=={{id}})
+            if(this.state.listmusics[i].uploader_id=={{id}})
                 musics.push(<Music data={this.state.listmusics[i]} mymusic="true"/>);
             else if(this.state.mode=='all')
                 musics.push(<Music data={this.state.listmusics[i]} mymusic="false"/>);
