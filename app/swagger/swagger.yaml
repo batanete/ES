@@ -7,6 +7,40 @@ consumes:
 produces:
   - application/json
 paths:
+  /upload_song:
+    post:
+      tags: [upload_song]
+      operationId: app.upload_song
+      summary: upload new song to the server
+
+      consumes:
+        - multipart/form-data
+      parameters:
+        - name: title
+          type: string
+          in: formData
+        - name: artist
+          type: string
+          in: formData
+        - name: album
+          type: string
+          in: formData
+        - name: year
+          type: integer
+          in: formData
+        - name: path
+          type: string
+          in: formData
+        - name: songfile
+          in: formData
+          description: The uploaded file data
+          required: true
+          type: file
+      responses:
+        200:
+          description: file uploaded successfully
+        403:
+          description: user is not logged in
   /:
     get:
       tags: [Login_menu]

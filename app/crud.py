@@ -83,11 +83,28 @@ def list_playlists(username,order):
 #returns whether the given user credentials are correct
 def verify_account(username,password):
     acc=session.query(User).filter_by(email=username,password=password).first()
-    
+
     if acc is None:
         return None
     else:
         return acc.to_json()
+
+#add a newly uploaded song to database
+def add_song(title,album,artist,year,path,uploader_email):
+    acc_user=session.query(User).filter_by(email=uploader_email).first()
+
+    if acc_user is None:
+        return False
+    print('chega')
+    try:
+        session.add(Song(title=title,album=album,artist=artist,year=year,path=path,uploader=acc_user))
+        session.commit()
+        return True
+    except Exception as e:
+        print(e)
+        session.rollback()
+        return False
+
 
 #deletes a song from database, if the given user is the owner
 def delete_song(username,songid):

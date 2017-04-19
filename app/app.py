@@ -3,6 +3,7 @@ import datetime
 import logging
 import random
 import string
+import os
 
 import connexion
 from connexion import NoContent
@@ -12,8 +13,8 @@ from base64 import b64encode
 import crud
 from datetime import timedelta
 
-sessions={}
 
+UPLOAD_FOLDER='/home/bata/uploaded_songs/'
 
 
 #returns a password's hash according to sha1
@@ -118,6 +119,30 @@ def logout():
     session.pop('token')
 
     return render_template('login_page.html'), 200
+
+
+#method for uploading a new song to database
+def upload_song(songfile,title,album,artist,year,path):
+    username=verify_session()
+
+    if username is None:
+        return NoContent,403
+
+
+    if not crud.add_song(title,album,artist,year,path,username):
+        return NoContent,403
+
+    #PARA A AMAZON FICA DIFERENTE ESTA PARTE
+    try:
+        os.stat(UPLOAD_FOLDER+path)
+    except:
+        os.mkdir(UPLOAD_FOLDER+path)
+    songfile.save(UPLOAD_FOLDER+path+'/'+str(songfile.filename))
+    #################
+
+    return NoContent,204
+
+
 
 #method for deleting a song uploaded by the user
 def delete_song(user_token,song_id):
@@ -308,6 +333,9 @@ def list_songs():
     else:
         logging.warning("no songs found ")
         return NoContent, 404
+
+
+
 
 
 logging.basicConfig(level=logging.INFO)

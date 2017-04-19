@@ -75,6 +75,7 @@ class Song(Base):
 
     title = Column(String(50), nullable=False)
     artist=Column(String(50), nullable=False)
+    album=Column(String(50), nullable=False)
     year=Column(Integer,nullable=False)
     path=Column(String(50), nullable=False)
 
@@ -84,4 +85,4 @@ class Song(Base):
         back_populates="songs")
 
     def to_json(self):
-        return {'id':self.id, 'title':self.title, 'artist':self.artist, 'year':self.year}
+        return {'id':self.id, 'title':self.title,'album': self.album,'artist':self.artist, 'year':self.year, 'uploader':self.uploader_id}

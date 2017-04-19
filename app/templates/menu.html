@@ -834,7 +834,7 @@ class MainComponent extends React.Component{
                                                     </div>
                                                         <form className="view btn-sm active" action="/account/logout">
                                                         <input type="submit" name="" value="Logout" /> <br/>
-                                                        
+
                                                         </form>
                                                 </div>
                                             </li>
@@ -1043,6 +1043,7 @@ class Music extends React.Component{
 
     constructor(props){
         super(props);
+
     }
 
     render(){
@@ -1069,7 +1070,13 @@ class Music extends React.Component{
                                 title: {this.props.data.title}
                                 <span className="pull-right pagado">({this.props.data.year})</span>
                             </h4>
-                            <p className="summary">artist: {this.props.data.artist}</p>
+                            <p className="summary">artist: {this.props.data.artist}
+                                <br/>
+                                album: {this.props.data.album}
+                                    <br/>
+                                uploader: {this.props.mymusic=="true" ? "you" : this.props.data.id}
+
+                            </p>
                         </div>
                     </div>
                 </td>
@@ -1088,9 +1095,26 @@ class Musics extends React.Component{
     constructor(props){
         super(props);
         console.log('meio construtor')
-        this.state={listmusics:[]};
+        this.state={listmusics:[],mode:'all'};
         this.getmusics()
         console.log('fim construtor')
+
+        this.allMode=this.allMode.bind(this);
+        this.yourMode=this.yourMode.bind(this);
+        this.uploadMode=this.uploadMode.bind(this);
+
+    }
+
+    allMode(){
+        this.setState({mode:'all'})
+    }
+
+    yourMode(){
+        this.setState({mode:'your'})
+    }
+
+    uploadMode(){
+        this.setState({mode:'upload'})
     }
 
     getmusics(){
@@ -1119,46 +1143,174 @@ class Musics extends React.Component{
                    alert("Problem in listing musics.");
                    this.setState({listmusics:[]});
                 }.bind(this)
-        }
-    )
+            }
+        )
 
     }
-/*
-    componentDidMount(){
-        //this.getmusics();
-    }*/
 
+    uploadSong(){
+        console.log('entra no upload song');
+
+        var year=parseInt($('#year').val());
+        if(isNaN(year)){
+            alert('year must be integer.')
+            return;
+        }
+
+        var formData = new FormData();
+        var file=$('#file')[0].files[0];
+        var title=$('#title_song').val();
+        var album=$('#album').val();
+        var artist=$('#artist').val();
+        var path=$('#song_path').val();
+
+        formData.append('songfile',file);
+        formData.append('year',year);
+        formData.append('title',title);
+        formData.append('album',album);
+        formData.append('artist',artist);
+        formData.append('path',path);
+
+        $.ajax({
+            url: 'http://localhost:8000/upload_song',
+            data: formData,
+            type: 'POST',
+            contentType: false, // NEEDED, DON'T OMIT THIS (requires jQuery 1.6+)
+            processData: false, // NEEDED, DON'T OMIT THIS
+            // ... Other options like success and etc
+            success: function(data) {
+                alert("song uploaded successfully");
+
+            }.bind(this),
+            error: function(xhr, status, err) {
+               alert("Problem uploading song.");
+            }.bind(this)
+        });
+
+
+    }
 
     render(){
-        //this.getmusics();
+        if(this.state.mode=='upload')
+            //TODOOOOO
+            return(
+                <div className="container">
+                	<div className="row">
+
+                		<section className="content">
+                			<h1>Musics</h1>
+                			<div className="col-md-8 col-md-offset-2">
+                				<div className="panel panel-default">
+                					<div className="panel-body">
+                						<div className="pull-right">
+                							<div className="btn-group">
+                								<button type="button" className="btn btn-warning btn-filter" onClick={this.allMode} data-target="pendiente">all songs</button>
+                								<button type="button" className="btn btn-danger btn-filter" onClick={this.yourMode} data-target="cancelado">your songs</button>
+                								<button type="button" className="btn btn-default btn-filter" onClick={this.uploadMode} data-target="all">upload new</button>
+                							</div>
+                						</div>
+                                        <form id="musicsform" class="form-horizontal" >
+                                            <div class="form-group">
+                                                <label for="email" class="cols-sm-2 control-label">title:</label>
+                                                <div class="cols-sm-10">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
+                                                        <input type="text" class="form-control" name="title" id="title_song"  placeholder="song's title"/>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="email" class="cols-sm-2 control-label">artist:</label>
+                                                <div class="cols-sm-10">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
+                                                        <input type="text" class="form-control" name="artist" id="artist"  placeholder="song's artist"/>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="email" class="cols-sm-2 control-label">album:</label>
+                                                <div class="cols-sm-10">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
+                                                        <input type="text" class="form-control" name="album" id="album"  placeholder="song's album"/>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="email" class="cols-sm-2 control-label">year:</label>
+                                                <div class="cols-sm-10">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
+                                                        <input type="text" class="form-control" name="year" id="year"  placeholder="song's year"/>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="email" class="cols-sm-2 control-label">path to save file in:</label>
+                                                <div class="cols-sm-10">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
+                                                        <input type="text" class="form-control" name="path" id="song_path"  placeholder="path"/>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="email" class="cols-sm-2 control-label">path to save file in:</label>
+                                                <div class="cols-sm-10">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
+                                                        <input type="file" name="file" class="form-control" name="file" id="file"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </form>
+                                        <div className="form-group ">
+                                            <button type="button" className="btn btn-primary btn-lg btn-block login-button" onClick={this.uploadSong}  >Upload song</button>
+                                        </div>
+                					</div>
+                				</div>
+                			</div>
+                		</section>
+                	</div>
+                </div>
+            );
+
         var musics=[];
         console.log('render de musics');
         console.log('data2:'+this.state.listmusics);
         for(var i=0;i<this.state.listmusics.length;i+=1){
             console.log('data2:'+this.state.listmusics[i]);
-            musics.push(
-
-                <Music data={this.state.listmusics[i]} />
-
-
-            );
+            if(this.state.listmusics[i].id=={{id}})
+                musics.push(<Music data={this.state.listmusics[i]} mymusic="true"/>);
+            else if(this.state.mode=='all')
+                musics.push(<Music data={this.state.listmusics[i]} mymusic="false"/>);
+            else {
+                continue;
+            }
         }
+
         return(
 
             <div className="container">
             	<div className="row">
 
             		<section className="content">
-            			<h1>Table Filter</h1>
+            			<h1>Musics</h1>
             			<div className="col-md-8 col-md-offset-2">
             				<div className="panel panel-default">
             					<div className="panel-body">
             						<div className="pull-right">
             							<div className="btn-group">
-            								<button type="button" className="btn btn-success btn-filter" data-target="pagado">Pagado</button>
-            								<button type="button" className="btn btn-warning btn-filter" data-target="pendiente">Pendiente</button>
-            								<button type="button" className="btn btn-danger btn-filter" data-target="cancelado">Cancelado</button>
-            								<button type="button" className="btn btn-default btn-filter" data-target="all">Todos</button>
+            								<button type="button" className="btn btn-warning btn-filter" onClick={this.allMode} data-target="pendiente">all songs</button>
+            								<button type="button" className="btn btn-danger btn-filter" onClick={this.yourMode} data-target="cancelado">your songs</button>
+            								<button type="button" className="btn btn-default btn-filter" onClick={this.uploadMode} data-target="all">upload new</button>
             							</div>
             						</div>
             						<div className="table-container">
@@ -1185,7 +1337,7 @@ class Musics extends React.Component{
 class SaveSettings extends React.Component{
     clicked(){
         var home='http://localhost:8000/account/edit';
-        var get_username = "bata@gmail.com"
+        var get_username = "{{username}}"
         var get_token = "token"
         var dat={
             username:get_username,
