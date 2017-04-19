@@ -77,7 +77,7 @@ def list_playlists(username,order):
 
     res=[]
     for playlist in playlists:
-        res.append(playlist[0])
+        res.append(playlist.to_json())
     return res
 
 #returns whether the given user credentials are correct
