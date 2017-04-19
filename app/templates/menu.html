@@ -910,32 +910,89 @@ class SideBar extends React.Component{
     }
 
 }
+class PlaylistEditor extends React.Component{
+    constructor(props){
+        super(props);
+        this.editName=this.editName.bind(this);
+        this.deletePlaylist=this.deletePlaylist.bind(this);
+
+
+    }
+    editName(){
+
+    }
+    deletePlaylist(){
+        var home="http://localhost:8000/account/playlist/delete";
+        var id=this.props.id;
+
+        var dat={
+            id: this.props.id
+        };
+
+        $.ajax({
+                type: 'DELETE',
+                url: home,
+                dataType: 'text',
+                data: JSON.stringify(dat),
+                contentType: 'application/json',
+                success: function(data) {
+					alert("Playlist removed successfully");
+                    window.location.reload(true);
+                }.bind(this),
+                error: function(xhr, status, err) {
+                   alert("Couldn't remove playlist.");
+                }.bind(this)
+            }
+        );
+    }
+    render(){
+        return(
+            <div className="form-group ">
+                New Title: <input type="text" name="new_name" id = "new_name"/><br/>
+                <button type="button" className="btn btn-primary btn-lg btn-block login-button" onClick={this.editName}  >edit</button>
+                <button type="button" className="btn btn-primary btn-lg btn-block login-button" onClick={this.deletePlaylist}  >delete</button>
+            </div>
+        );
+    }
+}
 
 class SinglePlaylist extends React.Component{
     constructor(props){
         super(props);
         //console.log("singlePlaylist: " + this.props.name)
+        this.state={editor:false};
+
+        this.editorToggle=this.editorToggle.bind(this);
+    }
+    editorToggle(){
+        if(this.props.mymusic=="false"){
+            console.log('nao e meu');
+            return;
+        }
+        console.log("chega aqui");
+        this.setState({editor:!(this.state.editor)});
     }
     render(){
+        var editorPl=<PlaylistEditor id={this.props.data.id}/>;
         return(
                 <tr data-status="pagado">
-
-
                 <td>
+                <td onClick={this.editorToggle}/>
                     <div className="media">
                         <a href="#" className="pull-left">
                             <img src="https://s3.amazonaws.com/uifaces/faces/twitter/fffabs/128.jpg" className="media-photo" />
                         </a>
                         <div className="media-body">
                             <h4 className="title">
-                                Name: {this.props.data}
-                                <span className="pull-right pagado">({this.props.data})</span>
+                                Name: {this.props.data.name}
+                                <span className="pull-right pagado">({this.props.data.name})</span>
                             </h4>
 
                         </div>
                     </div>
-                </td>
-                </tr>
+                    </td>
+                    {editorPl}
+                    </tr>
 
         );
     }
