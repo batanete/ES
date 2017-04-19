@@ -1159,6 +1159,96 @@ class MusicEditor extends React.Component{
                 <button type="button" className="btn btn-primary btn-lg btn-block login-button" onClick={this.confirm}  >edit</button>
                 <button type="button" className="btn btn-primary btn-lg btn-block login-button" onClick={this.disown}  >disown</button>
             </div>
+
+        );
+    }
+}
+
+
+class MinimizedPlaylist extends React.Component{
+    constructor(props){
+        super(props);
+    }
+    render(){
+        return(
+            <p>this.props.name</p>
+        )
+    }
+
+
+}
+
+class MusicAdder extends React.Component{
+    constructor(props){
+        super(props);
+        this.add_to_playlist=this.add_to_playlist.bind(this);
+        this.get_playlists=this.get_playlists.bind(this);
+    }
+
+    add_to_playlist(){
+        console.log('song id');
+    }
+
+    get_playlists(){
+        console.log("A entrar no render Playlists")
+        var home='http://localhost:8000/account/playlist/list';
+        var get_username = "{{username}}"
+        var get_token = "token"
+        var order_selected = "asc"
+        var dat={
+        }
+        $.ajax({
+                type: 'GET',
+                url: home,
+                data: dat,
+                contentType: 'application/json',
+                success: function(data) {
+                    return data;
+                }.bind(this),
+                error: function(xhr, status, err) {
+                   alert("Problem in listing playlists.");
+                   return [];
+                }.bind(this)
+            }
+        );
+        return [];
+    }
+
+    render(){
+        var pls=this.get_playlists();
+        var playlists=[];
+        for(var i=0;i<pls.length;i++){
+            playlists.push(
+                <div>
+                <MinimizedPlaylist id={this.pls[i].id} name={pls[i].name} songid={this.props.songid}/>
+                <br/>
+                </div>
+            );
+        }
+
+        return(
+            <div>
+            <form id="addtoplaylistform" class="form-horizontal" >
+                <div class="form-group">
+                    <div class="cols-sm-10">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
+                            <input type="text" class="form-control" name="playlist_to_add" id="playlist_to_add"  placeholder="playlist's name"/>
+                        </div>
+                    </div>
+                </div>
+                <div className="form-group ">
+                    <button type="button" className="btn btn-primary btn-lg btn-block login-button" onClick={this.add_to_playlist}  >Add</button>
+                </div>
+            </form>
+            <p className="summary">artist: {this.props.data.artist}
+                <br/>
+                <div id="playlistsadder">
+                <h2>Your playlists:</h2>
+                {playlists}
+                </div>
+            </p>
+            </div>
         );
     }
 }
@@ -1188,11 +1278,6 @@ class Music extends React.Component{
             return(
                     <tr data-status="pagado" >
 
-                    <td>
-                        <a href="javascript:;" className="star">
-                            <i className="glyphicon glyphicon-star"></i>
-                        </a>
-                    </td>
                     <td onClick={this.editorToggle}>
                         <div className="media">
                             <a href="#" className="pull-left">
@@ -1224,17 +1309,7 @@ class Music extends React.Component{
         else {
             return(
                     <tr data-status="pagado" onClick={this.editorToggle}>
-                    <td>
-                        <div className="ckbox">
-                            <input type="checkbox" id="checkbox1"/>
-                            <label for="checkbox1"></label>
-                        </div>
-                    </td>
-                    <td>
-                        <a href="javascript:;" className="star">
-                            <i className="glyphicon glyphicon-star"></i>
-                        </a>
-                    </td>
+
                     <td>
                         <div className="media">
                             <a href="#" className="pull-left">
@@ -1281,6 +1356,7 @@ class Musics extends React.Component{
         this.allMode=this.allMode.bind(this);
         this.yourMode=this.yourMode.bind(this);
         this.uploadMode=this.uploadMode.bind(this);
+        this.getmusics=this.getmusics.bind(this);
 
     }
 
@@ -1294,6 +1370,11 @@ class Musics extends React.Component{
 
     uploadMode(){
         this.setState({mode:'upload'})
+    }
+
+    componentDidMount(){
+        console.log("componentDidMount")
+        this.interval = setInterval(this.getmusics, 1000);
     }
 
     getmusics(){
@@ -1476,7 +1557,6 @@ class Musics extends React.Component{
         }
 
         return(
-
             <div className="container">
             	<div className="row">
 
@@ -1485,6 +1565,7 @@ class Musics extends React.Component{
             			<div className="col-md-8 col-md-offset-2">
             				<div className="panel panel-default">
             					<div className="panel-body">
+                                    <h1>Click on a song for options</h1>
             						<div className="pull-right">
             							<div className="btn-group">
             								<button type="button" className="btn btn-warning btn-filter" onClick={this.allMode} data-target="pendiente">all songs</button>
