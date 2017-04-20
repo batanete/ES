@@ -919,25 +919,50 @@ class PlaylistEditor extends React.Component{
 
     }
     editName(){
-
-    }
-    deletePlaylist(){
-        var home="http://localhost:8000/account/playlist/delete";
+        var home="http://localhost:8000/account/edit_playlist_name";
         var id=this.props.id;
+        var newname=$('#new_name').val()
 
         var dat={
-            id: this.props.id
+            id: id,
+            newname:newname,
         };
 
         $.ajax({
-                type: 'DELETE',
+                type: 'PUT',
                 url: home,
                 dataType: 'text',
                 data: JSON.stringify(dat),
                 contentType: 'application/json',
                 success: function(data) {
+					alert("music edited successfully");
+
+                }.bind(this),
+                error: function(xhr, status, err) {
+                   alert("Couldn't edit song.");
+                }.bind(this)
+            }
+        );
+
+    }
+    deletePlaylist(){
+        console.log("delete ID:" +this.props.id);
+        var home="http://localhost:8000/account/playlist/delete";
+        var id_var=parseInt(this.props.id);
+        console.log("delete ID2:" +id_var);
+
+        var dat={
+            id: id_var
+        };
+
+        $.ajax({
+                type: 'POST',
+                url: home,
+                data: JSON.stringify(dat),
+                contentType: 'application/json',
+                success: function(data) {
 					alert("Playlist removed successfully");
-                    window.location.reload(true);
+                    //window.location.reload(true);
                 }.bind(this),
                 error: function(xhr, status, err) {
                    alert("Couldn't remove playlist.");
@@ -1079,7 +1104,7 @@ class Playlists extends React.Component{
         console.log("inside render")
         console.log("playlists: "+this.state.playlists.length)
         for(var i = 0; i < this.state.playlists.length; i += 1){
-            console.log("data2 :"+this.state.playlists[i]);
+            console.log("data2 :"+this.state.playlists[i].id);
             playlistNodes.push(
 
                     <SinglePlaylist key={i} data={this.state.playlists[i]}/>

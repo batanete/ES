@@ -274,16 +274,10 @@ paths:
       operationId: app.edit_playlist_name
       summary: edit playlist name
       parameters:
-        - name: playlist_id
-          in: query
-          type: integer
-        - name: new_name
-          in: query
-          type: string
-        - name: user_token
+        - name: newplaylistname
           in: body
           schema:
-            $ref: '#/definitions/User_token'
+            $ref: '#/definitions/EditPlaylistName'
       responses:
         200:
           description: Playlist name updated successfully
@@ -326,17 +320,18 @@ paths:
           description: User is not logged in
 
   /account/playlist/delete:
-    delete:
+    post:
       tags: [delete_playlist]
       operationId: app.delete_playlist
       summary: delete playlist
       parameters:
         - name: playlist_id
-          in: query
-          type: integer
+          in: body
+          schema:
+            $ref: '#/definitions/Playlist_ID'
       responses:
         200:
-          description: Listed songs
+          description: Deleted playlist
         404:
           description: Playlist not found
         403:
@@ -409,6 +404,31 @@ definitions:
       newalbum:
         type: string
         description: new song album
+        example: 1
+
+  EditPlaylistName:
+    type: object
+    required:
+      - id
+      - newname
+    properties:
+      id:
+        type: integer
+        description: playlist id
+        example: 1
+      newname:
+        type: string
+        description: new playlist name
+        example: 1
+
+  Playlist_ID:
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        type: integer
+        description: playlist id
         example: 1
 
 

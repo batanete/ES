@@ -240,14 +240,18 @@ def create_playlist(playlist_name):
         return NoContent, 400
 
 #edit the name of one playlist
-def edit_playlist_name(user_token, playlist_id, new_name):
+def edit_playlist_name(newplaylistname):
     username=verify_session()
 
     if username is None:
         return NoContent,403
 
+    playlist_id=newplaylistname['id']
+    new_name=newplaylistname['newname']
     logging.info("attempting to edit playlist name" +str(playlist_id) +" to " +new_name)
-    username = "teste"
+
+
+
     if crud.edit_playlist_name(playlist_id, new_name, username):
         logging.info("successfully edited playlist "+str(playlist_id)+" to "+new_name)
         return NoContent, 200
@@ -288,17 +292,18 @@ def list_playlist_songs(user_token, playlist_id):
 #delete a playlist
 def delete_playlist(playlist_id):
     username=verify_session()
-
+    print(playlist_id['id'])
     if username is None:
         return NoContent,403
 
-    logging.info("attempting to delete a playlist" +playlist_id)
-    username = "teste"
-    if crud.list_playlist_songs(playlist_id, username):
-        logging.info("successfully deleted playlist "+playlist_id)
-        return NoContent, 200
+    pl_id = playlist_id['id']
+    logging.info("attempting to delete a playlist" +str(pl_id))
+
+    if crud.delete_playlist(pl_id, username):
+        logging.info("successfully deleted playlist "+str(pl_id))
+        return NoContent, 204
     else:
-        logging.warning("failed to delete playlist "+playlist_id)
+        logging.warning("failed to delete playlist "+str(pl_id))
         return NoContent, 404
 
 #edit a song

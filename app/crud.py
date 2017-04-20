@@ -71,9 +71,9 @@ def list_playlists(username,order):
         return None
 
     if order=='a':
-        playlists=session.query(Playlist.name).filter_by(owner=acc_user).order_by(Playlist.name).all()
+        playlists=session.query(Playlist).filter_by(owner=acc_user).order_by(Playlist.name).all()
     else:
-        playlists=session.query(Playlist.name).filter_by(owner=acc_user).order_by(Playlist.name.desc()).all()
+        playlists=session.query(Playlist).filter_by(owner=acc_user).order_by(Playlist.name.desc()).all()
 
     res=[]
     for playlist in playlists:
@@ -243,13 +243,14 @@ def list_playlist_songs(playlist_id, username):
 
             return songs_array
 
-def delete_playlist(playlist_name, username):
+def delete_playlist(playlist_id, username):
     acc_user=session.query(User).filter_by(email=username).first()
 
     if acc_user is None:
         return False
     else:
         #owd_id = acc_user.id
+        print("username: "+username)
         get_playlist=session.query(Playlist).get(playlist_id)
 
         if get_playlist is None:
