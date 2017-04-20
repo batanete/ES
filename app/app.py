@@ -14,7 +14,7 @@ import crud
 from datetime import timedelta
 
 
-UPLOAD_FOLDER='/home/bata/uploaded_songs/'
+UPLOAD_FOLDER='/home/hsilveiro/uploaded_songs/'
 
 
 #returns a password's hash according to sha1
@@ -195,15 +195,21 @@ def add_music_to_playlist(playlist_song):
     else:
         return NoContent,204
 
-def remove_music_from_playlist(user_token, song_id, playlist_id):
+def remove_music_from_playlist(removed_song):
     username=verify_session()
 
     if username is None:
         return NoContent,403
 
-    if crud.remove_music_from_playlist(playlist_id, song_id, username):
+    song_id=removed_song['song_id']
+    playlist_id=removed_song['playlist_id']
+
+    print("song_id: "+str(song_id))
+    print("playlist_id: "+str(playlist_id))
+
+    if crud.remove_music_from_playlist(username, song_id, playlist_id):
         logging.info("successfully deleted song")
-        return NoContent, 200
+        return NoContent, 204
     else:
         logging.warning("failed to delete song "+str(song_id)+".song not found")
         return NoContent, 404
@@ -275,20 +281,20 @@ def list_playlists():
     return crud.list_playlists(username,order),200
 
 #list the songs of a specific playlist !!!!
-def list_playlist_songs(user_token, playlist_id):
+def list_playlist_songs(playlist_id):
     username=verify_session()
 
     if username is None:
         return NoContent,403
 
 
-    logging.info("attempting to list songs from playlist" +playlist_id)
-    username = "teste"
-    if crud.list_playlist_songs(playlist_id, username) is not None:
-        logging.info("successfully listed playlist songs "+playlist_id)
-        return NoCOntent, 200
+    logging.info("attempting to list songs from playlist" +str(playlist_id))
+    aux=crud.list_playlist_songs(playlist_id, username)
+    if aux is not None:
+        logging.info("successfully listed playlist songs "+str(playlist_id))
+        return aux, 200
     else:
-        logging.warning("failed to list playlist songs "+playlist_id)
+        logging.warning("failed to list playlist songs "+str(playlist_id))
         return NoContent, 404
 
 #delete a playlist

@@ -179,7 +179,12 @@ def remove_music_from_playlist(username, songid, playlistid):
     acc=session.query(User).filter_by(email=username).first()
     song=session.query(Song).get(songid)
     pl=session.query(Playlist).get(playlistid)
-
+    print(songid)
+    print(playlistid)
+    print("------")
+    print(acc)
+    print(song)
+    print(pl)
     #one of the three doesn't exist
     if acc is None or song is None or pl is None:
         return None
