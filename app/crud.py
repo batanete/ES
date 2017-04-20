@@ -71,9 +71,9 @@ def list_playlists(username,order):
         return None
 
     if order=='a':
-        playlists=session.query(Playlist.name).filter_by(owner=acc_user).order_by(Playlist.name).all()
+        playlists=session.query(Playlist).filter_by(owner=acc_user).order_by(Playlist.name).all()
     else:
-        playlists=session.query(Playlist.name).filter_by(owner=acc_user).order_by(Playlist.name.desc()).all()
+        playlists=session.query(Playlist).filter_by(owner=acc_user).order_by(Playlist.name.desc()).all()
 
     res=[]
     for playlist in playlists:

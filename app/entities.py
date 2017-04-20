@@ -65,7 +65,7 @@ class Playlist(Base):
                     back_populates="playlists")
 
     def to_json(self):
-        return {'id':self.id, 'name': self.name,'owner_id':self.owner_id,'creation_date':str(creation_date)}
+        return {'id':self.id, 'name': self.name,'owner_id':self.owner_id,'creation_date':str(self.creation_date)}
 
 
 class Song(Base):

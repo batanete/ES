@@ -204,16 +204,11 @@ paths:
       operationId: app.add_music_to_playlist
       summary: Add a single song to the playlist
       parameters:
-        - name: user_token
+        - name: playlist_song
           in: body
           schema:
-            $ref: '#/definitions/User_token'
-        - name: song_id
-          in: query
-          type: integer
-        - name: playlist_id
-          in: query
-          type: integer
+            $ref: '#/definitions/Playlist_song'
+
 
 
       responses:
@@ -385,6 +380,21 @@ paths:
 
 
 definitions:
+  Playlist_song:
+    type: object
+    required:
+      - song_id
+      - playlist_id
+    properties:
+      song_id:
+        type: integer
+        description: song's id
+        example: 1
+      playlist_id:
+        type: integer
+        description: playlists's id
+        example: 1
+
   EditSong:
     type: object
     required:
