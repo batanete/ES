@@ -288,7 +288,7 @@ def list_playlist_songs(user_token, playlist_id):
         return NoContent, 404
 
 #delete a playlist
-def delete_playlist(user_token, playlist_name):
+def delete_playlist(playlist_id):
     username=verify_session()
 
     if username is None:

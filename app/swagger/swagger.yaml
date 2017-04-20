@@ -321,7 +321,7 @@ paths:
           description: User is not logged in
 
   /account/playlist/delete:
-    post:
+    delete:
       tags: [delete_playlist]
       operationId: app.delete_playlist
       summary: delete playlist
@@ -329,10 +329,6 @@ paths:
         - name: playlist_id
           in: query
           type: integer
-        - name: user_token
-          in: body
-          schema:
-            $ref: '#/definitions/User_token'
       responses:
         200:
           description: Listed songs
