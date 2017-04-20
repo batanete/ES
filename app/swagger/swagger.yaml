@@ -279,7 +279,10 @@ paths:
       tags: [list_playlists]
       operationId: app.list_playlists
       summary: list playlists owned by user
-
+      parameters:
+        - name: order
+          in: query
+          type: string
       responses:
         200:
           description: Listed playlists
@@ -295,6 +298,7 @@ paths:
         - name: playlist_id
           in: query
           type: integer
+
       responses:
         200:
           description: Listed songs

@@ -1083,7 +1083,7 @@ class PlaylistEditor extends React.Component{
     render(){
         return(
             <div className="form-group ">
-                New Title: <input type="text" name="new_name" id = "new_name"/><br/>
+                New name: <input type="text" name="new_name" id = "new_name"/><br/>
                 <button type="button" className="btn btn-primary btn-lg btn-block login-button" onClick={this.editName}  >edit</button>
                 <button type="button" className="btn btn-primary btn-lg btn-block login-button" onClick={this.deletePlaylist}  >delete</button>
             </div>
@@ -1121,7 +1121,7 @@ class SinglePlaylist extends React.Component{
                         <div className="media-body">
                             <h4 className="title">
                                 Name: {this.props.data.name}
-                                <span className="pull-right pagado">({this.props.data.name})</span>
+                                <span className="pull-right pagado">({this.props.data.creation_date})</span>
                             </h4>
 
                         </div>
@@ -1139,9 +1139,14 @@ class SinglePlaylist extends React.Component{
 class Playlists extends React.Component{
     constructor(props){
         super(props);
-        this.state={playlists:[]};
+        this.state={playlists:[],order:'an'};
         this.get_playlists=this.get_playlists.bind(this);
         this.get_playlists();
+
+        this.ascModeName=this.ascModeName.bind(this);
+        this.descModeName=this.descModeName.bind(this);
+        this.ascModeDate=this.ascModeDate.bind(this);
+        this.descModeDate=this.descModeDate.bind(this);
 
         //this.getplays();
     }
@@ -1156,7 +1161,7 @@ class Playlists extends React.Component{
         $.ajax({
                 type: 'POST',
                 url: home,
-
+                async:false,
                 data: JSON.stringify(dat),
                 contentType: 'application/json',
                 success: function(data) {
@@ -1168,9 +1173,36 @@ class Playlists extends React.Component{
                 error: function(xhr, status, err) {
                    alert("Problem in creating information.");
                 }.bind(this)
-        }
-
+            }
         );
+
+    }
+
+    ascModeName(){
+        console.log('asc')
+        this.state.order='an';
+        this.get_playlists()
+
+    }
+
+    descModeName(){
+        console.log('desc')
+
+        this.state.order='dn';
+        this.get_playlists()
+    }
+
+    ascModeDate(){
+        console.log('asc')
+        this.state.order='ad';
+        this.get_playlists()
+    }
+
+    descModeDate(){
+        console.log('desc')
+        this.state.order='dd';
+        this.get_playlists()
+
     }
 
     getplays(){
@@ -1182,8 +1214,9 @@ class Playlists extends React.Component{
         var home='http://localhost:8000/account/playlist/list';
         var get_username = "{{username}}"
         var get_token = "token"
-        var order_selected = "asc"
+        var order_selected = this.state.order;
         var dat={
+            order:order_selected
         }
         $.ajax({
                 type: 'GET',
@@ -1204,10 +1237,6 @@ class Playlists extends React.Component{
         }
         );
     }
-    componentDidMount(){
-        console.log("componentDidMount")
-        this.interval = setInterval(this.get_playlists, 5000);
-    }
 
     render(){
         //get_playlists();
@@ -1215,6 +1244,7 @@ class Playlists extends React.Component{
         console.log("inside render")
         console.log("playlists: "+this.state.playlists.length)
         for(var i = 0; i < this.state.playlists.length; i += 1){
+
             console.log("data2 :"+this.state.playlists[i].id);
             playlistNodes.push(
 
@@ -1235,6 +1265,15 @@ class Playlists extends React.Component{
             				<div className="panel panel-default">
             					<div className="panel-body">
                                     <h3> Click on the music to remove</h3>
+
+            						<div className="pull-right">
+            							<div className="btn-group">
+            								<button type="button" className="btn btn-success btn-filter" onClick={this.ascModeName} data-target="pagado">Ascending(name)</button>
+            								<button type="button" className="btn btn-warning btn-filter" onClick={this.descModeName} data-target="pendiente">Descending(name)</button>
+                                            <button type="button" className="btn btn-success btn-filter" onClick={this.ascModeDate} data-target="pagado">Ascending(date)</button>
+            								<button type="button" className="btn btn-warning btn-filter" onClick={this.descModeDate} data-target="pendiente">Descending(date)</button>
+            							</div>
+            						</div>
             						<div className="table-container">
             							<table className="table table-filter">
             								<tbody>
@@ -1311,10 +1350,9 @@ class MusicEditor extends React.Component{
 
     disown(){
         var home="http://localhost:8000/song";
-        var id=this.props.id;
 
         var dat={
-            id: this.props.id
+            id: this.props.songid
         };
 
         $.ajax({
@@ -1378,7 +1416,7 @@ class MinimizedPlaylist extends React.Component{
 					alert("music added to playlist successfully");
                 }.bind(this),
                 error: function(xhr, status, err) {
-                   alert("Couldn't add song.");
+                   alert("Couldn't add song. Maybe it is already on the playlist?");
                 }.bind(this)
             }
         );
@@ -1414,7 +1452,7 @@ class MusicAdder extends React.Component{
         var get_token = "token"
         var order_selected = "asc"
         var dat={
-
+            order:'ad'
         }
         var res=[];
         $.ajax({
@@ -1429,7 +1467,7 @@ class MusicAdder extends React.Component{
                     return res;
                 }.bind(this),
                 error: function(xhr, status, err) {
-                   alert("Problem in listing playlists.");
+                   //alert("Problem in listing playlists.");
                    res=[];
                    return res;
                 }.bind(this)
@@ -1857,6 +1895,12 @@ class SaveSettings extends React.Component{
                             <label for="name" class="cols-sm-2 control-label">Current Email:</label>
                             <div class="cols-sm-10">
                                 <label for="name" class="cols-sm-2 control-label">"{{username}}"</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="name" class="cols-sm-2 control-label">Current Name:</label>
+                            <div class="cols-sm-10">
+                                <label for="name" class="cols-sm-2 control-label">"{{name}}"</label>
                             </div>
                         </div>
                     </div>

@@ -268,8 +268,7 @@ def edit_playlist_name(newplaylistname):
         return NoContent, 404
 
 #list playlists created by user
-def list_playlists():
-    order = 'a'
+def list_playlists(order):
     username=verify_session()
 
     if username is None:
@@ -373,4 +372,4 @@ def make_session_permanent():
 
 if __name__=='__main__':
     application.secret_key='cenas lixadas'
-    app.run(port=8000)
+    app.run(host='127.0.0.1',port=8000)
