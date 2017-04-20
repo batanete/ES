@@ -70,11 +70,14 @@ def list_playlists(username,order):
     if acc_user is None:
         return None
 
-    if order=='a':
+    if order=='an':
         playlists=session.query(Playlist).filter_by(owner=acc_user).order_by(Playlist.name).all()
-    else:
+    elif order=='dn':
         playlists=session.query(Playlist).filter_by(owner=acc_user).order_by(Playlist.name.desc()).all()
-
+    elif order=='ad':
+        playlists=session.query(Playlist).filter_by(owner=acc_user).order_by(Playlist.creation_date).all()
+    else:
+        playlists=session.query(Playlist).filter_by(owner=acc_user).order_by(Playlist.creation_date.desc()).all()
     res=[]
     for playlist in playlists:
         res.append(playlist.to_json())
@@ -171,6 +174,11 @@ def add_music_to_playlist(username,songid,playlistid):
     if pl.owner!=acc:
         return False
 
+    #music already in playlist
+    if song in pl.songs:
+        return False
+
+
     pl.songs.append(song)
     session.commit()
     return True
@@ -243,14 +251,13 @@ def list_playlist_songs(playlist_id, username):
 
             return songs_array
 
-def delete_playlist(playlist_id, username):
+def delete_playlist(playlist_id,username):
     acc_user=session.query(User).filter_by(email=username).first()
 
     if acc_user is None:
         return False
     else:
         #owd_id = acc_user.id
-        print("username: "+username)
         get_playlist=session.query(Playlist).get(playlist_id)
 
         if get_playlist is None:

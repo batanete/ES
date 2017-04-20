@@ -262,8 +262,7 @@ def edit_playlist_name(newplaylistname):
         return NoContent, 404
 
 #list playlists created by user
-def list_playlists():
-    order = 'a'
+def list_playlists(order):
     username=verify_session()
 
     if username is None:
@@ -275,7 +274,7 @@ def list_playlists():
     return crud.list_playlists(username,order),200
 
 #list the songs of a specific playlist !!!!
-def list_playlist_songs(user_token, playlist_id):
+def list_playlist_songs(playlist_id):
     username=verify_session()
 
     if username is None:
@@ -367,4 +366,4 @@ def make_session_permanent():
 
 if __name__=='__main__':
     application.secret_key='cenas lixadas'
-    app.run(port=8000)
+    app.run(host='127.0.0.1',port=8000)
