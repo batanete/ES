@@ -179,13 +179,15 @@ def disown_song(song_id):
 
 
 #adds a song to playlist the user owns.
-def add_music_to_playlist(user_token,song_id,playlistid):
+def add_music_to_playlist(playlist_song):
     username=verify_session()
 
     if username is None:
         return NoContent,403
+    song_id=playlist_song['song_id']
+    playlist_id=playlist_song['playlist_id']
 
-    res=crud.add_music_to_playlist(username,songid,playlistid)
+    res=crud.add_music_to_playlist(username,song_id,playlist_id)
     if res is None:
         return NoContent,404
     elif not res:

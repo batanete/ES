@@ -1037,7 +1037,6 @@ class Playlists extends React.Component{
         var home='http://localhost:8000/account/create_playlist';
         var playlist_name = $("#playlist_name").val();
         console.log("value: "+playlist_name);
-        var get_token = "token"
         var dat={
             name: $("#playlist_name").val(),
         }
@@ -1095,7 +1094,7 @@ class Playlists extends React.Component{
     }
     componentDidMount(){
         console.log("componentDidMount")
-        this.interval = setInterval(this.get_playlists, 1000);
+        this.interval = setInterval(this.get_playlists, 5000);
     }
 
     render(){
@@ -1250,10 +1249,40 @@ class MusicEditor extends React.Component{
 class MinimizedPlaylist extends React.Component{
     constructor(props){
         super(props);
+        this.add_song=this.add_song.bind(this);
+        console.log("entra no minimized")
     }
+
+    add_song(){
+        console.log('clicaste no add song de '+this.props.name+' para a musica '+this.props.songid)
+        var home='http://localhost:8000/playlist/addsong'
+        var playlist_id=this.props.id;
+        var song_id=this.props.songid;
+
+        var dat={
+            playlist_id:playlist_id,
+            song_id:song_id
+        }
+        $.ajax({
+                type: 'PUT',
+                url: home,
+                dataType: 'text',
+                data: JSON.stringify(dat),
+                contentType: 'application/json',
+                success: function(data) {
+					alert("music added to playlist successfully");
+                }.bind(this),
+                error: function(xhr, status, err) {
+                   alert("Couldn't add song.");
+                }.bind(this)
+            }
+        );
+
+    }
+
     render(){
         return(
-            <p>this.props.name</p>
+            <button type="button" className="btn btn-danger btn-filter" onClick={this.add_song} data-target="cancelado">{this.props.name}</button>
         )
     }
 
@@ -1263,8 +1292,10 @@ class MinimizedPlaylist extends React.Component{
 class MusicAdder extends React.Component{
     constructor(props){
         super(props);
+
         this.add_to_playlist=this.add_to_playlist.bind(this);
         this.get_playlists=this.get_playlists.bind(this);
+
     }
 
     add_to_playlist(){
@@ -1278,31 +1309,40 @@ class MusicAdder extends React.Component{
         var get_token = "token"
         var order_selected = "asc"
         var dat={
+
         }
+        var res=[];
         $.ajax({
                 type: 'GET',
                 url: home,
                 data: dat,
+                async: false,
                 contentType: 'application/json',
                 success: function(data) {
-                    return data;
+                    res=data;
+                    console.log('res1:'+res.length);
+                    return res;
                 }.bind(this),
                 error: function(xhr, status, err) {
                    alert("Problem in listing playlists.");
-                   return [];
+                   res=[];
+                   return res;
                 }.bind(this)
             }
         );
-        return [];
+        console.log('res2:'+res.length);
+        return res;
     }
 
     render(){
         var pls=this.get_playlists();
         var playlists=[];
+        console.log('tam:'+pls.length);
         for(var i=0;i<pls.length;i++){
             playlists.push(
                 <div>
-                <MinimizedPlaylist id={this.pls[i].id} name={pls[i].name} songid={this.props.songid}/>
+
+                <MinimizedPlaylist id={pls[i].id} name={pls[i].name} songid={this.props.data.id}/>
                 <br/>
                 </div>
             );
@@ -1310,23 +1350,9 @@ class MusicAdder extends React.Component{
 
         return(
             <div>
-            <form id="addtoplaylistform" class="form-horizontal" >
-                <div class="form-group">
-                    <div class="cols-sm-10">
-                        <div class="input-group">
-                            <span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
-                            <input type="text" class="form-control" name="playlist_to_add" id="playlist_to_add"  placeholder="playlist's name"/>
-                        </div>
-                    </div>
-                </div>
-                <div className="form-group ">
-                    <button type="button" className="btn btn-primary btn-lg btn-block login-button" onClick={this.add_to_playlist}  >Add</button>
-                </div>
-            </form>
-            <p className="summary">artist: {this.props.data.artist}
-                <br/>
-                <div id="playlistsadder">
-                <h2>Your playlists:</h2>
+            <h4>Add song to one of your playlists:</h4>
+            <p className="summary">
+                <div id="playlistsadderdiv">
                 {playlists}
                 </div>
             </p>
@@ -1354,7 +1380,8 @@ class Music extends React.Component{
     }
 
     render(){
-        var editor=<MusicEditor id={this.props.data.id}/>;
+        var editor=<MusicEditor songid={this.props.data.id}/>;
+        var adder=<MusicAdder data={this.props.data}/>
         if(this.state.editor==true){
             console.log("entra no true");
             return(
@@ -1368,7 +1395,7 @@ class Music extends React.Component{
                             <div className="media-body">
                                 <h4 className="title">
                                     title: {this.props.data.title}
-                                    <span className="pull-right pagado">({this.props.data.year})</span>
+                                    <span className="pull-right pagado">(released: {this.props.data.year})</span>
                                 </h4>
                                 <p className="summary">artist: {this.props.data.artist}
                                     <br/>
@@ -1384,15 +1411,16 @@ class Music extends React.Component{
                         </div>
                     </td>
                     {editor}
+                    {adder}
                     </tr>
 
             );
         }
         else {
             return(
-                    <tr data-status="pagado" onClick={this.editorToggle}>
+                    <tr data-status="pagado" >
 
-                    <td>
+                    <td onClick={this.editorToggle}>
                         <div className="media">
                             <a href="#" className="pull-left">
                                 <img src="https://sites.google.com/site/eduquemusica/_/rsrc/1472857283365/conteudo/avaliacoes/Clave-de-sol.jpg?height=200&width=200" className="media-photo" />
@@ -1400,7 +1428,7 @@ class Music extends React.Component{
                             <div className="media-body">
                                 <h4 className="title">
                                     title: {this.props.data.title}
-                                    <span className="pull-right pagado">({this.props.data.year})</span>
+                                    <span className="pull-right pagado">(released:{this.props.data.year})</span>
                                 </h4>
                                 <p className="summary">artist: {this.props.data.artist}
                                     <br/>
@@ -1415,6 +1443,7 @@ class Music extends React.Component{
                             </div>
                         </div>
                     </td>
+                    {adder}
                     </tr>
 
             );
@@ -1456,7 +1485,7 @@ class Musics extends React.Component{
 
     componentDidMount(){
         console.log("componentDidMount")
-        this.interval = setInterval(this.getmusics, 1000);
+        this.interval = setInterval(this.getmusics, 5000);
     }
 
     getmusics(){
