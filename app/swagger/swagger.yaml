@@ -103,7 +103,7 @@ paths:
           description: User is not allowed to edit the given user's info
 
   /account/login:
-    get:
+    post:
       tags: [Login]
       operationId: app.login
       summary: attempt to login to an account
@@ -113,19 +113,19 @@ paths:
 
       parameters:
         - name: username
-          in: query
+          in: formData
           type: string
         - name: password
-          in: query
+          in: formData
           type: string
       responses:
         200:
           description: Login successful
         403:
-          description: Login failedsubl
+          description: Login failed
 
   /account/logout:
-    get:
+    post:
       tags: [Logout]
       operationId: app.logout
       summary: logout
@@ -134,7 +134,7 @@ paths:
 
       responses:
         200:
-          description: Login successful
+          description: Logout successful
 
   /song:
     get:
