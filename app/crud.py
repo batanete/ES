@@ -304,7 +304,6 @@ def list_songs():
         return None
 
     else:
-        print songs
         songs_array = []
         for i in songs:
             songs_array.append(i.to_json)
