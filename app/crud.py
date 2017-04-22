@@ -20,8 +20,10 @@ def get_session():
     with open("bd_url", "r") as f:
         bd_url = f.read()
 
-
     engine = create_engine(bd_url)
+    engine.execute("CREATE DATABASE IF NOT EXISTS esdb")
+    engine.execute("use esdb")
+
     DBSession = sessionmaker(bind=engine)
     # A DBSession() instance establishes all conversations with the database
     # and represents a "staging zone" for all the objects loaded into the

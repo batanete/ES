@@ -857,8 +857,8 @@ class MainComponent extends React.Component{
 
 
 }
-
-
+//var HOME='http://lowcost-env.bh2w76udie.us-west-2.elasticbeanstalk.com';
+var HOME='';
 
 class SideBar extends React.Component{
     constructor(props){
@@ -921,7 +921,7 @@ class MinimizedMusic extends React.Component{
     remove_song(){
         //console.log('clicaste no remove song de '+this.props.name+' para a musica '+this.props.songid)
         console.log('MinimizedMusic ... remove_song')
-        var home='http://localhost:8000/playlist/removesong'
+        var home=HOME+'/playlist/removesong'
         var playlist_id=this.props.playlistid;
         var song_id=this.props.id;
         console.log("Playlist_id: "+playlist_id);
@@ -966,7 +966,7 @@ class MusicAux extends React.Component{
 
     get_musics(){
         console.log("Listing musics...")
-        var home='http://localhost:8000/account/playlist/list_playlist_songs';
+        var home=HOME+'/account/playlist/list_playlist_songs';
         var id_pl = this.props.data.id;
         console.log("id_pl:  "+id_pl)
         var dat={
@@ -1029,7 +1029,7 @@ class PlaylistEditor extends React.Component{
 
     }
     editName(){
-        var home="http://localhost:8000/account/edit_playlist_name";
+        var home=HOME+"/account/edit_playlist_name";
         var id=this.props.id;
         var newname=$('#new_name').val()
 
@@ -1057,7 +1057,7 @@ class PlaylistEditor extends React.Component{
     }
     deletePlaylist(){
         console.log("delete ID:" +this.props.id);
-        var home="http://localhost:8000/account/playlist/delete";
+        var home=HOME+"/account/playlist/delete";
         var id_var=parseInt(this.props.id);
         console.log("delete ID2:" +id_var);
 
@@ -1151,7 +1151,7 @@ class Playlists extends React.Component{
         //this.getplays();
     }
     clicked(){
-        var home='http://localhost:8000/account/create_playlist';
+        var home=HOME+'/account/create_playlist';
         var playlist_name = $("#playlist_name").val();
         console.log("value: "+playlist_name);
         var dat={
@@ -1211,7 +1211,7 @@ class Playlists extends React.Component{
     }
     get_playlists(){
         console.log("A entrar no render Playlists")
-        var home='http://localhost:8000/account/playlist/list';
+        var home=HOME+'/account/playlist/list';
         var get_username = "{{username}}"
         var get_token = "token"
         var order_selected = this.state.order;
@@ -1310,7 +1310,7 @@ class MusicEditor extends React.Component{
             return;
         }
 
-        var home="http://localhost:8000/account/edit_song";
+        var home=HOME+"/account/edit_song";
         var id=this.props.songid;
         var newtitle=$('#new_title').val()
         var newalbum=$('#new_album').val()
@@ -1349,7 +1349,7 @@ class MusicEditor extends React.Component{
     }
 
     disown(){
-        var home="http://localhost:8000/song";
+        var home=HOME+"/song";
 
         var dat={
             id: this.props.songid
@@ -1398,7 +1398,7 @@ class MinimizedPlaylist extends React.Component{
 
     add_song(){
         console.log('clicaste no add song de '+this.props.name+' para a musica '+this.props.songid)
-        var home='http://localhost:8000/playlist/addsong'
+        var home=HOME+'/playlist/addsong'
         var playlist_id=this.props.id;
         var song_id=this.props.songid;
 
@@ -1447,7 +1447,7 @@ class MusicAdder extends React.Component{
 
     get_playlists(){
         console.log("A entrar no render Playlists")
-        var home='http://localhost:8000/account/playlist/list';
+        var home=HOME+'/account/playlist/list';
         var get_username = "{{username}}"
         var get_token = "token"
         var order_selected = "asc"
@@ -1633,7 +1633,7 @@ class Musics extends React.Component{
 
     getmusics(){
         console.log("entra no getmusic do musics");
-        var home='http://localhost:8000/song';
+        var home=HOME+'/song';
         var get_username = "bata@gmail.com"
         var get_token = "token"
         var criteria = $("#search").val()
@@ -1686,7 +1686,7 @@ class Musics extends React.Component{
         formData.append('path',path);
 
         $.ajax({
-            url: 'http://localhost:8000/upload_song',
+            url: HOME+'/upload_song',
             data: formData,
             type: 'POST',
             contentType: false, // NEEDED, DON'T OMIT THIS (requires jQuery 1.6+)
@@ -1850,7 +1850,7 @@ class Musics extends React.Component{
 
 class SaveSettings extends React.Component{
     clicked(){
-        var home='http://localhost:8000/account/edit';
+        var home=HOME+'/account/edit';
         var get_username = "{{username}}"
         var get_token = "token"
         var dat={

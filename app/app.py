@@ -4,7 +4,7 @@ import logging
 import random
 import string
 import os
-
+import boto3
 import connexion
 from connexion import NoContent
 from flask import Flask,render_template,request,make_response,session,escape,redirect,url_for
@@ -14,14 +14,14 @@ import crud
 from datetime import timedelta
 
 
-UPLOAD_FOLDER='/home/bata/uploaded_songs/'
+UPLOAD_FOLDER='./'
 
 
 #returns a password's hash according to sha1
 def encrypt_password(key):
 
     m=sha1()
-    m.update(key)
+    m.update(key.encode('utf-8'))
     return b64encode(m.digest())
 
 #generates a random token for a user session.
@@ -133,12 +133,16 @@ def upload_song(songfile,title,album,artist,year,path):
         return NoContent,403
 
     #PARA A AMAZON FICA DIFERENTE ESTA PARTE
+    """
     try:
         os.stat(UPLOAD_FOLDER+path)
     except:
         os.mkdir(UPLOAD_FOLDER+path)
     songfile.save(UPLOAD_FOLDER+path+'/'+str(songfile.filename))
+    """
     #################
+    s3 = boto3.resource('s3', aws_access_key_id = AWS_KEY_ID, aws_secret_access_key = AWS_KEY)
+    s3.Bucket('es2bata').put_object(Key = path+'/'+songfile.filename, Body = songfile)
 
     return NoContent,204
 
@@ -351,3 +355,12 @@ def list_songs():
     else:
         logging.warning("no songs found ")
         return NoContent, 404
+
+
+#read aws keys from file
+def get_aws_keys():
+    global AWS_KEY,AWS_KEY_ID
+    with open('keys','r') as f:
+        lines=f.readlines()
+        AWS_KEY_ID=lines[0].replace('\n','')
+        AWS_KEY=lines[1].replace('\n','')

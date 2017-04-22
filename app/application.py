@@ -1,4 +1,5 @@
 from app import *
+from datetime import datetime
 
 logging.basicConfig(level=logging.INFO)
 dbsession=crud.get_session()
@@ -7,6 +8,9 @@ app = connexion.App(__name__, specification_dir='swagger/')
 app.add_api('swagger.yaml')
 
 application=app.app
+application.secret_key='cenas lixadas'
+
+get_aws_keys()
 
 
 @application.before_request
@@ -25,8 +29,12 @@ def httpfibonacci():
         n = int(request.args['n'])
     except:
         return 'Wrong arugments', 404
-    return 'Fibonacci(' + str(n) + ') = ' + str(fibonacci(n))
+    start=datetime.now()
+    res=fibonacci(n)
+    end=datetime.now()
+    delta=end-start
+    return 'Fibonacci(' + str(n) + ') = ' + str(res)+';time:'+str(delta)
 
 if __name__=='__main__':
-    application.secret_key='cenas lixadas'
+    app.debug=True
     app.run(host='127.0.0.1',port=8000)
